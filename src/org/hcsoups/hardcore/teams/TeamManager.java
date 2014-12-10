@@ -3,7 +3,6 @@ package org.hcsoups.hardcore.teams;
 import com.mongodb.*;
 import mkremins.fanciful.FancyMessage;
 import org.apache.commons.lang.Validate;
-import org.bson.types.BasicBSONList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -60,17 +59,17 @@ public class TeamManager implements Listener {
 
     public Team createTeam(Player player, String name, String password) {
         if (!name.matches(isValid.pattern())) {
-            player.sendMessage("§cInvalid name!");
+            player.sendMessage("&cInvalid name!");
             return null;
         }
 
         if (doesTeamExist(name)) {
-            player.sendMessage("§cThe team '" + name + "' already exists!");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cThe team '" + name + "' already exists!"));
             return null;
         }
 
         if (isOnTeam(player.getName())) {
-            player.sendMessage("§cYou are already on a team!");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou are already on a team!"));
             return null;
         }
 
@@ -79,7 +78,7 @@ public class TeamManager implements Listener {
         mans.add(player.getName());
 
         Team team1 = new Team(name, mans, new ArrayList<String>(), password);
-        player.sendMessage("§7Team created!\n§7To learn more about teams, do /team");
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7Team created!\n&7To learn more about teams, do /team"));
         inTeam.put(player.getName(), team1);
         saveInTeam();
         teams.add(team1);
@@ -96,30 +95,30 @@ public class TeamManager implements Listener {
         Team team = matchTeam(name);
 
         if (team == null) {
-            player.sendMessage("§cCould not find team '" + name + "'.");
+            player.sendMessage("&cCould not find team '" + name + "'.");
             return false;
         } else {
             if (!team.getPassword().isEmpty()) {
                 if (password.isEmpty()) {
-                    player.sendMessage("§cTeam requires a password!");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cTeam requires a password!"));
                     return false;
                 } else {
                     if (password.equals(team.getPassword())) {
                         messageTeam(team, "&7" + player.getName() + " has joined the team!");
-                        player.sendMessage("§7You have successfully joined the team!");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7You have successfully joined the team!"));
                         team.getMembers().add(player.getName());
                         inTeam.put(player.getName(), team);
                         //      saveInTeam();
                         //      saveTeam(team);
                         return true;
                     } else {
-                        player.sendMessage("§cWrong password!");
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cWrong password!"));
                         return false;
                     }
                 }
             } else {
                 messageTeam(team, "&7" + player.getName() + " has joined the team!");
-                player.sendMessage("§7You have successfully joined the team!");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7You have successfully joined the team!"));
                 team.getMembers().add(player.getName());
                 inTeam.put(player.getName(), team);
                 //   saveInTeam();
@@ -130,6 +129,7 @@ public class TeamManager implements Listener {
     }
 
     public void messageTeam(Team team, String message) {
+        message = ChatColor.translateAlternateColorCodes('&', message);
         for (String member : team.getMembers()) {
             Player p = Bukkit.getPlayerExact(member);
             if (p == null) {
@@ -174,7 +174,7 @@ public class TeamManager implements Listener {
         List<String> options = matchPlayer(name);
 
         if(options.size() <= 0) {
-            player.sendMessage("§cCould not find player '" + name + "'.");
+            player.sendMessage("&cCould not find player '" + name + "'.");
             return;
         }
 
@@ -183,12 +183,12 @@ public class TeamManager implements Listener {
             for (int i = 0; i < options.size(); i++) {
                 if(i < options.size()-1) {
                     message.text(options.get(i)).color(ChatColor.GRAY)
-                            .tooltip("§aClick here to view '§f" + options.get(i) + " §a' team.")
+                            .tooltip("&aClick here to view '&f" + options.get(i) + " &a' team.")
                             .command("/team info " + options.get(i))
                             .then(", ").color(ChatColor.GRAY).then();
                 } else {
                     message.text(options.get(i)).color(ChatColor.GRAY)
-                            .tooltip("§aClick here to view '§f" + options.get(i) + " §a' team.")
+                            .tooltip("&aClick here to view '&f" + options.get(i) + " &a' team.")
                             .command("/team info " + options.get(i));
                 }
             }
@@ -200,7 +200,7 @@ public class TeamManager implements Listener {
         Team team = getPlayerTeam(options.get(0));
 
         if (team == null) {
-            player.sendMessage("§cPlayer '" + name + "' is not on a team.");
+            player.sendMessage("&cPlayer '" + name + "' is not on a team.");
             return;
         }
 
@@ -208,15 +208,15 @@ public class TeamManager implements Listener {
             sendInfo(player);
             return;
         } else {
-            player.sendMessage("§7***§3" + team.getName() + "§7***");
+            player.sendMessage("&7***&3" + team.getName() + "&7***");
 
             if (team.getManagers().size() >= 1) {
                 for (String man : team.getManagers()) {
                     Player manp = Bukkit.getPlayer(man);
                     if (manp != null) {
-                        player.sendMessage(" §3" + man + " §7- Health: " + formatHealth((manp.getHealth() * 5)) + "%");
+                        player.sendMessage(" &3" + man + " &7- Health: " + formatHealth((manp.getHealth() * 5)) + "%");
                     } else {
-                        player.sendMessage(" §3" + man + " §7- Offline");
+                        player.sendMessage(" &3" + man + " &7- Offline");
                     }
                 }
             }
@@ -224,9 +224,9 @@ public class TeamManager implements Listener {
                 for (String mem : team.getMembers()) {
                     Player memp = Bukkit.getPlayer(mem);
                     if (memp != null) {
-                        player.sendMessage(" §7" + mem + " - Health: " + formatHealth((memp.getHealth() * 5)) + "%");
+                        player.sendMessage(" &7" + mem + " - Health: " + formatHealth((memp.getHealth() * 5)) + "%");
                     } else {
-                        player.sendMessage(" §7" + mem + " - Offline");
+                        player.sendMessage(" &7" + mem + " - Offline");
                     }
                 }
             }
@@ -238,21 +238,21 @@ public class TeamManager implements Listener {
     // For commands such as /t r <Name>
     public void sendInfo(Player player, Team team) {
         if (team == null) {
-            player.sendMessage("§cTeam does not exist!");
+            player.sendMessage("&cTeam does not exist!");
         }
         if (getPlayerTeam(player) != null && getPlayerTeam(player).equals(team)) {
             sendInfo(player);
             return;
         } else {
-            player.sendMessage("§7***§3" + team.getName() + "§7***");
+            player.sendMessage("&7***&3" + team.getName() + "&7***");
 
             if (team.getManagers().size() >= 1) {
                 for (String man : team.getManagers()) {
                     Player manp = Bukkit.getPlayer(man);
                     if (manp != null) {
-                        player.sendMessage(" §3" + man + " §7- Health: " + formatHealth((manp.getHealth() * 5)) + "%");
+                        player.sendMessage(" &3" + man + " &7- Health: " + formatHealth((manp.getHealth() * 5)) + "%");
                     } else {
-                        player.sendMessage(" §3" + man + " §7- Offline");
+                        player.sendMessage(" &3" + man + " &7- Offline");
                     }
                 }
             }
@@ -260,9 +260,9 @@ public class TeamManager implements Listener {
                 for (String mem : team.getMembers()) {
                     Player memp = Bukkit.getPlayer(mem);
                     if (memp != null) {
-                        player.sendMessage(" §7" + mem + " - Health: " + formatHealth((memp.getHealth() * 5)) + "%");
+                        player.sendMessage(" &7" + mem + " - Health: " + formatHealth((memp.getHealth() * 5)) + "%");
                     } else {
-                        player.sendMessage(" §7" + mem + " - Offline");
+                        player.sendMessage(" &7" + mem + " - Offline");
                     }
                 }
             }
@@ -272,25 +272,25 @@ public class TeamManager implements Listener {
 
     public void sendInfo(Player player) {
         if (inTeam.get(player.getName()) == null) {
-            player.sendMessage("§cYou are not on any team!");
+            player.sendMessage("&cYou are not on any team!");
             return;
         }
         Team team = inTeam.get(player.getName());
 
-        player.sendMessage("§7***§3" + team.getName() + "§7***");
-        player.sendMessage("§7Password: " + (team.getPassword().isEmpty() || team.getPassword().equals("") ? "Not Set" : team.getPassword()));
-        player.sendMessage("§7Friendly Fire is " + (team.isFriendlyFire() ? "§con" : "§aoff"));
-        player.sendMessage("§7Team HQ: " + (team.getHq() == null ? "Not Set" : "Set"));
-        player.sendMessage("§7Team Rally: " + (team.getRally() == null ? "Not Set" : "Set"));
-        player.sendMessage("§7Members: ");
+        player.sendMessage("&7***&3" + team.getName() + "&7***");
+        player.sendMessage("&7Password: " + (team.getPassword().isEmpty() || team.getPassword().equals("") ? "Not Set" : team.getPassword()));
+        player.sendMessage("&7Friendly Fire is " + (team.isFriendlyFire() ? "&con" : "&aoff"));
+        player.sendMessage("&7Team HQ: " + (team.getHq() == null ? "Not Set" : "Set"));
+        player.sendMessage("&7Team Rally: " + (team.getRally() == null ? "Not Set" : "Set"));
+        player.sendMessage("&7Members: ");
 
         if (team.getManagers().size() >= 1) {
             for (String man : team.getManagers()) {
                 Player manp = Bukkit.getPlayer(man);
                 if (manp != null) {
-                    player.sendMessage(" §3" + man + " §7- Health: " + formatHealth((manp.getHealth() * 5)) + "%");
+                    player.sendMessage(" &3" + man + " &7- Health: " + formatHealth((manp.getHealth() * 5)) + "%");
                 } else {
-                    player.sendMessage(" §3" + man + " §7- Offline");
+                    player.sendMessage(" &3" + man + " &7- Offline");
                 }
             }
         }
@@ -298,9 +298,9 @@ public class TeamManager implements Listener {
             for (String mem : team.getMembers()) {
                 Player memp = Bukkit.getPlayer(mem);
                 if (memp != null) {
-                    player.sendMessage(" §7" + mem + " - Health: " + formatHealth((memp.getHealth() * 5)) + "%");
+                    player.sendMessage(" &7" + mem + " - Health: " + formatHealth((memp.getHealth() * 5)) + "%");
                 } else {
-                    player.sendMessage(" §7" + mem + " - Offline");
+                    player.sendMessage(" &7" + mem + " - Offline");
                 }
             }
         }
@@ -599,7 +599,7 @@ public class TeamManager implements Listener {
 
     public void leaveTeam(final Player player) {
         if (inTeam.get(player.getName()) == null) {
-            player.sendMessage("§cYou are not in a team!");
+            player.sendMessage("&cYou are not in a team!");
         } else {
             final Team team = inTeam.get(player.getName());
             team.getMembers().remove(player.getName());
@@ -608,11 +608,11 @@ public class TeamManager implements Listener {
                 disbandTeam(team);
                 inTeam.remove(player.getName());
                 teamChat.remove(player.getName());
-                player.sendMessage("§3Your team was disbanded because there were no more members or managers left!");
+                player.sendMessage("&3Your team was disbanded because there were no more members or managers left!");
                 return;
             }
-            messageTeam(team, "§3" + player.getName() + " has left the team!");
-            player.sendMessage("§3You have left the team!");
+            messageTeam(team, "&3" + player.getName() + " has left the team!");
+            player.sendMessage("&3You have left the team!");
             //    saveTeam(team);
             inTeam.remove(player.getName());
             //   saveInTeam();
@@ -705,15 +705,15 @@ public class TeamManager implements Listener {
 
     public void teamTeleport(final Player p, String locName, final Location loc) {
         if (getPlayerTeam(p) == null) {
-            p.sendMessage("§cYou are not on a team!");
+            p.sendMessage("&cYou are not on a team!");
             return;
         } else if (loc == null) {
-            p.sendMessage("§cTeam " + locName + " is not set!");
+            p.sendMessage("&cTeam " + locName + " is not set!");
             return;
         } else {
             if (canTeleport(p)) {
                 p.teleport(loc);
-                p.sendMessage(String.format("§7Warped to your team's %s!", locName));
+                p.sendMessage(String.format("&7Warped to your team's %s!", locName));
 
 
             } else {
@@ -725,7 +725,7 @@ public class TeamManager implements Listener {
                     }
                 });
                 dontMove.get(p.getName()).runTaskLater(Hardcore.getPlugin(Hardcore.class), 10 * 20L);
-                p.sendMessage("§7Someone is nearby! Warping in 10 seconds! Do not move!");
+                p.sendMessage("&7Someone is nearby! Warping in 10 seconds! Do not move!");
             }
         }
 
@@ -738,7 +738,7 @@ public class TeamManager implements Listener {
             if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
                 dontMove.get(e.getPlayer().getName()).cancel();
                 dontMove.remove(e.getPlayer().getName());
-                e.getPlayer().sendMessage("§cYou moved! Warping cancelled!");
+                e.getPlayer().sendMessage("&cYou moved! Warping cancelled!");
             }
         }
     }

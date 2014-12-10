@@ -17,7 +17,7 @@ public class Info extends TeamSubCommand {
     @Override
     public void execute(Player p, String[] args) {
         if(args.length > 1) {
-            p.sendMessage("§c/team info [Player]");
+            p.sendMessage("&c/team info [Player]");
             return;
         }
 

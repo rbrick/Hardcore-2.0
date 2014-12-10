@@ -261,17 +261,17 @@ public class TrackingMethods {
                 // sbm = new StringBuilder("{\"text\":\"" + compass + " (" + num
                 // + "):\",\"color\":\"dark_aqua\",\"extra\":[{\"text\":\" " +
                 // ChatColor.stripColor(in.get(0))+
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"§aClick here to track §f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"&aClick here to track &f'"
                 // + in.get(0)+
-                // "§f'§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "&f'&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // +ChatColor.stripColor(in.get(0)) + "\"}}");
                 // if (in.size() > 1) {
                 // for (int i = 1; i < in.size(); i++) {
                 // sbm.append(",{\"text\":\", \",\"color\":\"gray\"}").append(",{\"text\":\""
                 // + ChatColor.stripColor(in.get(i)) +
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"§aClick here to track §f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"&aClick here to track &f'"
                 // + in.get(i) +
-                // "§f'§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "&f'&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // + ChatColor.stripColor(in.get(i)) + "\"}}");
                 // }
                 // }
@@ -301,17 +301,17 @@ public class TrackingMethods {
                 // sbm = new StringBuilder("{\"text\":\"" + compass + " (" + num
                 // + "):\",\"color\":\"dark_aqua\",\"extra\":[{\"text\":\" " +
                 // ChatColor.stripColor(in.get(0))+
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
                 // + in.get(0)+
-                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // +ChatColor.stripColor(in.get(0)) + "\"}}");
                 // if (in.size() > 1) {
                 // for (int i = 1; i < in.size(); i++) {
                 // sbm.append(",{\"text\":\", \",\"color\":\"gray\"}").append(",{\"text\":\""
                 // + ChatColor.stripColor(in.get(i)) +
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
                 // + in.get(i) +
-                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // + ChatColor.stripColor(in.get(i)) + "\"}}");
                 // }
                 // }
@@ -341,17 +341,17 @@ public class TrackingMethods {
                 // sbm = new StringBuilder("{\"text\":\"" + compass + " (" + num
                 // + "):\",\"color\":\"dark_aqua\",\"extra\":[{\"text\":\" " +
                 // ChatColor.stripColor(in.get(0))+
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
                 // + in.get(0)+
-                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // +ChatColor.stripColor(in.get(0)) + "\"}}");
                 // if (in.size() > 1) {
                 // for (int i = 1; i < in.size(); i++) {
                 // sbm.append(",{\"text\":\", \",\"color\":\"gray\"}").append(",{\"text\":\""
                 // + ChatColor.stripColor(in.get(i)) +
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
                 // + in.get(i) +
-                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // + ChatColor.stripColor(in.get(i)) + "\"}}");
                 // }
                 // }
@@ -381,17 +381,17 @@ public class TrackingMethods {
                 // sbm = new StringBuilder("{\"text\":\"" + compass + " (" + num
                 // + "):\",\"color\":\"dark_aqua\",\"extra\":[{\"text\":\" " +
                 // ChatColor.stripColor(in.get(0))+
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
                 // + in.get(0)+
-                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // +ChatColor.stripColor(in.get(0)) + "\"}}");
                 // if (in.size() > 1) {
                 // for (int i = 1; i < in.size(); i++) {
                 // sbm.append(",{\"text\":\", \",\"color\":\"gray\"}").append(",{\"text\":\""
                 // + ChatColor.stripColor(in.get(i)) +
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
                 // + in.get(i) +
-                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // + ChatColor.stripColor(in.get(i)) + "\"}}");
                 // }
                 // }

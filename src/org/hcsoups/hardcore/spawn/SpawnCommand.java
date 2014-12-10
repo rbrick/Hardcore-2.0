@@ -11,7 +11,7 @@ import org.hcsoups.hardcore.zeus.annotations.Command;
  */
 public class SpawnCommand {
 
-    @Command(name = "setspawn", aliases = {"ss"}, minArgs = 2, maxArgs = 2, usage = "§cUsage: /<command> <radius> <height>", permission = "hcsoups.hardcore.setspawn")
+    @Command(name = "setspawn", aliases = {"ss"}, minArgs = 2, maxArgs = 2, usage = "&cUsage: /<command> <radius> <height>", permission = "hcsoups.hardcore.setspawn")
     public void setspawn(CommandSender sender, String[] args) {
         if(sender instanceof Player) {
            Player player = (Player) sender;
@@ -20,9 +20,9 @@ public class SpawnCommand {
                 int y = Integer.parseInt(args[1]);
                 Spawn spawn = new Spawn(radius,y);
                 SpawnManager.getInstance().setSpawn(spawn);
-                player.sendMessage(String.format("§aSpawn has been set with a radius of '%d' with a height of '%d'.", radius, y));
+                player.sendMessage(String.format("&aSpawn has been set with a radius of '%d' with a height of '%d'.", radius, y));
             } catch (NumberFormatException ex) {
-                player.sendMessage("§c'" + args[0] + "' is not a number!");
+                player.sendMessage("&c'" + args[0] + "' is not a number!");
             }
         }
     }
@@ -40,7 +40,7 @@ public class SpawnCommand {
 //        Spawn spawn = SpawnManager.getInstance().getSpawn();
 //
 //        if (spawn == null) {
-//            sender.sendMessage("§cSpawn not set up yet!");
+//            sender.sendMessage("&cSpawn not set up yet!");
 //            return;
 //        }
 //

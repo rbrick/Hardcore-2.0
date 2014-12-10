@@ -31,7 +31,7 @@ public abstract class BaseCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
         if (permission != null && !sender.hasPermission(this.permission)) {
-            sender.sendMessage("§cNo permission!");
+            sender.sendMessage("&cNo permission!");
             return false;
         } else {
 

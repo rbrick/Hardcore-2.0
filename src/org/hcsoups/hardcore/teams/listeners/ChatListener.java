@@ -16,11 +16,11 @@ public class ChatListener implements Listener {
             event.setCancelled(true);
             String name = event.getPlayer().getName();
           if(TeamManager.getInstance().isManager(event.getPlayer())) {
-                   name = "§3" + name;
+                   name = "&3" + name;
             } else {
-                name = "§7" + name;
+                name = "&7" + name;
              }
-            TeamManager.getInstance().messageTeam(TeamManager.getInstance().getPlayerTeam(event.getPlayer()), String.format("§7[%s]§f<%s§f> §f%s", TeamManager.getInstance().getPlayerTeam(event.getPlayer()).getName(),name, event.getMessage()));
+            TeamManager.getInstance().messageTeam(TeamManager.getInstance().getPlayerTeam(event.getPlayer()), String.format("&7[%s]&f<%s&f> &f%s", TeamManager.getInstance().getPlayerTeam(event.getPlayer()).getName(),name, event.getMessage()));
         }
     }
 }

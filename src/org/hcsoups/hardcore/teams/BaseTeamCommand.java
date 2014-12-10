@@ -19,11 +19,11 @@ public class BaseTeamCommand extends BaseCommand {
 
     List<String> list = Arrays.asList("create", "join", "leave", "info", "roster", "chat", "hq", "rally", "ff", "password", "kick", "promote", "demote", "sethq", "setrally");
 
-    String[] teamUsage = {"§7***§3Anyone§7***", "§7/team create <Name> [Password] - Creates a new team","§7/team join <Name> [Password] - Join a team","§7/team leave - Leave your current team",
-            "§7/team info [Player] - Shows information about a player's team","§7/team roster [Team] - Shows information about a given team","§7/team chat - Toggle team chat mode",
-            "§7/team hq - Teleports you to your team's headquarters","§7/team rally - Teleports you to your team's rally point","§7***§3Managers Only§7***","§7/team ff <On/Off> - Toggle friendly fire",
-            "§7/team password <Password/None/Null/Nil> - Sets your team's password","§7/team kick <Player> - Kicks a player from the team","§7/team promote <Player> - Promote a player to manager",
-            "§7/team demote <Player> - Demote a player to member","§7/team sethq - Sets the teams headquarters","§7/team setrally - Sets the teams rally point"};
+    String[] teamUsage = {"&7***&3Anyone&7***", "&7/team create <Name> [Password] - Creates a new team","&7/team join <Name> [Password] - Join a team","&7/team leave - Leave your current team",
+            "&7/team info [Player] - Shows information about a player's team","&7/team roster [Team] - Shows information about a given team","&7/team chat - Toggle team chat mode",
+            "&7/team hq - Teleports you to your team's headquarters","&7/team rally - Teleports you to your team's rally point","&7***&3Managers Only&7***","&7/team ff <On/Off> - Toggle friendly fire",
+            "&7/team password <Password/None/Null/Nil> - Sets your team's password","&7/team kick <Player> - Kicks a player from the team","&7/team promote <Player> - Promote a player to manager",
+            "&7/team demote <Player> - Demote a player to member","&7/team sethq - Sets the teams headquarters","&7/team setrally - Sets the teams rally point"};
 
     public BaseTeamCommand(Hardcore main) {
         super("team","", "t");
@@ -61,39 +61,39 @@ public class BaseTeamCommand extends BaseCommand {
 
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage("§7***§3Anyone§7***");
+            sender.sendMessage("&7***&3Anyone&7***");
             // /team create
-            sender.sendMessage("§7/team create <Name> [Password] - Creates a new team");
+            sender.sendMessage("&7/team create <Name> [Password] - Creates a new team");
             // team join
-            sender.sendMessage("§7/team join <Name> [Password] - Join a team");
+            sender.sendMessage("&7/team join <Name> [Password] - Join a team");
             // /team leave
-            sender.sendMessage("§7/team leave - Leave your current team");
+            sender.sendMessage("&7/team leave - Leave your current team");
             // /team info
-            sender.sendMessage("§7/team info [Player] - Shows information about a player's team");
+            sender.sendMessage("&7/team info [Player] - Shows information about a player's team");
             // /team roster
-            sender.sendMessage("§7/team roster [Team] - Shows information about a given team");
+            sender.sendMessage("&7/team roster [Team] - Shows information about a given team");
             // /team chat
-            sender.sendMessage("§7/team chat - Toggle team chat mode");
+            sender.sendMessage("&7/team chat - Toggle team chat mode");
             // /team hq
-            sender.sendMessage("§7/team hq - Teleports you to your team's headquarters");
+            sender.sendMessage("&7/team hq - Teleports you to your team's headquarters");
             // /team rally
-            sender.sendMessage("§7/team rally - Teleports you to your team's rally point");
+            sender.sendMessage("&7/team rally - Teleports you to your team's rally point");
 
-            sender.sendMessage("§7***§3Managers Only§7***");
+            sender.sendMessage("&7***&3Managers Only&7***");
             // /t ff
-            sender.sendMessage("§7/team ff <On/Off> - Toggle friendly fire");
+            sender.sendMessage("&7/team ff <On/Off> - Toggle friendly fire");
             // /team password
-            sender.sendMessage("§7/team password <Password/None/Null/Nil> - Sets your team's password");
+            sender.sendMessage("&7/team password <Password/None/Null/Nil> - Sets your team's password");
             // /team kick
-            sender.sendMessage("§7/team kick <Player> - Kicks a player from the team");
+            sender.sendMessage("&7/team kick <Player> - Kicks a player from the team");
             // /team promote
-            sender.sendMessage("§7/team promote <Player> - Promote a player to manager");
+            sender.sendMessage("&7/team promote <Player> - Promote a player to manager");
             // /team demote
-            sender.sendMessage("§7/team demote <Player> - Demote a player to member");
+            sender.sendMessage("&7/team demote <Player> - Demote a player to member");
             // /team sethq
-            sender.sendMessage("§7/team sethq - Sets the teams headquarters");
+            sender.sendMessage("&7/team sethq - Sets the teams headquarters");
             // /team setrally
-            sender.sendMessage("§7/team setrally - Sets the teams rally point");
+            sender.sendMessage("&7/team setrally - Sets the teams rally point");
             return;
         } else {
             try {
@@ -101,7 +101,7 @@ public class BaseTeamCommand extends BaseCommand {
                 tc.execute(((Player) sender), fixArgs(args));
                 return;
             } catch (Exception ex) {
-               sender.sendMessage("§cUnrecognized team command!\nDo /team for help.");
+               sender.sendMessage("&cUnrecognized team command!\nDo /team for help.");
             }
         }
         return;
