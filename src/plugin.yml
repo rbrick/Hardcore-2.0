@@ -1,0 +1,3 @@
+main: org.hcsoups.hardcore.Hardcore
+name: ${project.name}-${project.version}
+version: ${project.version}
