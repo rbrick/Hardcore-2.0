@@ -15,11 +15,11 @@ import org.hcsoups.hardcore.zeus.annotations.Command;
  */
 public class WarpCommand implements IBaseCommand {
 
-    @BaseCommandAnn(name="warp", aliases = "go", minArgs = 1,maxArgs = 2, usage = "&cInvalid /<command> usage. Try:\n" +
-            "&7/<command> <name> - Teleport to a warp, if it exists.\n" +
-            "&7/<command> list - List all your warps.\n" +
-            "&7/<command> set <name> - Set a warp at your current location.\n" +
-            "&7/<command> del <name> - Delete a warp.")
+    @BaseCommandAnn(name="warp", aliases = "go", minArgs = 1,maxArgs = 2, usage = "§cInvalid /<command> usage. Try:\n" +
+            "§7/<command> <name> - Teleport to a warp, if it exists.\n" +
+            "§7/<command> list - List all your warps.\n" +
+            "§7/<command> set <name> - Set a warp at your current location.\n" +
+            "§7/<command> del <name> - Delete a warp.")
     public void execute(CommandSender sender, String[] args) {
         if(!(sender instanceof Player)) return;
         if (args.length == 1) {
@@ -28,13 +28,13 @@ public class WarpCommand implements IBaseCommand {
                 return;
             } else {
                 if (args[0].equalsIgnoreCase("set")) {
-                  sender.sendMessage("&c/warp set <Name>");
+                  sender.sendMessage("§c/warp set <Name>");
                 } else if(args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("delete")) {
-                    sender.sendMessage("&c/warp del <Name>");
+                    sender.sendMessage("§c/warp del <Name>");
                 } else {
 
                     if (canPerformWarpOrWarpSet(((Player) sender).getLocation())) {
-                        sender.sendMessage("&cYou may not warp within 512 blocks of spawn.");
+                        sender.sendMessage("§cYou may not warp within 512 blocks of spawn.");
                         return;
                     }
 
@@ -44,7 +44,7 @@ public class WarpCommand implements IBaseCommand {
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("set")) {
                 if (canPerformWarpOrWarpSet(((Player) sender).getLocation())) {
-                    sender.sendMessage("&cYou may not set warps within 512 blocks of spawn.");
+                    sender.sendMessage("§cYou may not set warps within 512 blocks of spawn.");
                     return;
                 }
                 WarpManager.getInstance().setWarp(((Player) sender), args[1]);
@@ -52,11 +52,11 @@ public class WarpCommand implements IBaseCommand {
             } else if (args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("delete")) {
                 WarpManager.getInstance().delWarp(((Player) sender), args[1]);
             } else {
-                sender.sendMessage("&cInvalid /warp usage. Try:\n" +
-                        "&7/warp <name> - Teleport to a warp, if it exists.\n" +
-                        "&7/warp list - List all your warps.\n" +
-                        "&7/warp set <name> - Set a warp at your current location.\n" +
-                        "&7/warp del <name> - Delete a warp.");
+                sender.sendMessage("§cInvalid /warp usage. Try:\n" +
+                        "§7/warp <name> - Teleport to a warp, if it exists.\n" +
+                        "§7/warp list - List all your warps.\n" +
+                        "§7/warp set <name> - Set a warp at your current location.\n" +
+                        "§7/warp del <name> - Delete a warp.");
             }
         }
     }

@@ -40,10 +40,10 @@ public class WarpManager {
 
     public void listWarps(Player player) {
         if(!warps.containsKey(player.getName()) || warps.containsKey(player.getName()) && warps.get(player.getName()).isEmpty()) {
-            player.sendMessage("&7***Warp List(0/" + warpSize(player) + ")***\n[]");
+            player.sendMessage("§7***Warp List(0/" + warpSize(player) + ")***\n[]");
             return;
         }
-        player.sendMessage("&7***Warp List(" + warps.get(player.getName()).size() + "/" + warpSize(player) + ")***");
+        player.sendMessage("§7***Warp List(" + warps.get(player.getName()).size() + "/" + warpSize(player) + ")***");
 
         StringBuilder builder = new StringBuilder();
 
@@ -55,12 +55,12 @@ public class WarpManager {
         for (int i = 0; i < pwarps.size(); i++) {
             if(i < pwarps.size()-1) {
                 message.text(pwarps.get(i).getName()).color(ChatColor.GRAY)
-                        .tooltip("&aClick here to warp to '&f" + pwarps.get(i).getName() + "&a'.")
+                        .tooltip("§aClick here to warp to '§f" + pwarps.get(i).getName() + "§a'.")
                         .command("/warp " + pwarps.get(i).getName())
                         .then(", ").color(ChatColor.GRAY).then();
             } else {
                 message.text(pwarps.get(i).getName()).color(ChatColor.GRAY)
-                        .tooltip("&aClick here to warp to '&f" + pwarps.get(i).getName() + "&a'.")
+                        .tooltip("§aClick here to warp to '§f" + pwarps.get(i).getName() + "§a'.")
                         .command("/warp " + pwarps.get(i).getName()).then();
             }
         }
@@ -72,11 +72,11 @@ public class WarpManager {
 
     public void listWarpsAdmin(Player player, String name) {
          if (matchPlayer(name) == null) {
-             player.sendMessage("&cCould not find player '" + name + "'.");
+             player.sendMessage("§cCould not find player '" + name + "'.");
          } else {
              String playerS = matchPlayer(name);
              if(!warps.containsKey(playerS) || warps.containsKey(playerS) && warps.get(playerS).isEmpty()) {
-                 player.sendMessage(String.format("&7Showing warps for %s: \n[]", playerS));
+                 player.sendMessage(String.format("§7Showing warps for %s: \n[]", playerS));
              } else {
                  StringBuilder builder = new StringBuilder();
 
@@ -90,7 +90,7 @@ public class WarpManager {
                      warpList = warpList.substring(0, warpList.length() - 1);
                  }
 
-                 player.sendMessage(String.format("&7Showing warps for %s: \n[%s]", playerS, warpList));
+                 player.sendMessage(String.format("§7Showing warps for %s: \n[%s]", playerS, warpList));
              }
          }
     }
@@ -99,25 +99,25 @@ public class WarpManager {
     public void setWarp(final Player player, String name) {
 
         if (!name.matches("^[A-Za-z0-9_]*$")) {
-            player.sendMessage("&cInvalid warp name!");
+            player.sendMessage("§cInvalid warp name!");
             return;
         }
 
         if (matchWarp(player.getName(), name) != null) {
             TempWarp twarp = new TempWarp(matchWarp(player.getName(), name), player.getLocation());
-            player.sendMessage(String.format("&eYou already have a warp with the name '&a%s&e'\n&eIf you would like to overwrite the warp type &2/yes\n&eor type &c/no &eto cancel the request.\n&eThis will expire in 10 seconds.", twarp.getWarp().getName()));
+            player.sendMessage(String.format("§eYou already have a warp with the name '§a%s§e'\n§eIf you would like to overwrite the warp type §2/yes\n§eor type §c/no §eto cancel the request.\n§eThis will expire in 10 seconds.", twarp.getWarp().getName()));
             player.setMetadata("warpToOverride", new FixedMetadataValue(Hardcore.getPlugin(Hardcore.class), twarp));
             overriding.put(player.getName(), new BukkitRunnable() {
                 @Override
                 public void run() {
-                    player.sendMessage("&cDid not receive an answer in time! Canceling request.");
+                    player.sendMessage("§cDid not receive an answer in time! Canceling request.");
                 }
             });
 
             overriding.get(player.getName()).runTaskLater(Hardcore.getPlugin(Hardcore.class), 200L);
         } else {
             if (warps.get(player.getName()) != null && warps.get(player.getName()).size() >= warpSize(player)) {
-                player.sendMessage("&cYou have set the max amount of warps!");
+                player.sendMessage("§cYou have set the max amount of warps!");
                 return;
             }
             List<Warp> pwarps = warps.get(player.getName());
@@ -128,26 +128,26 @@ public class WarpManager {
             Warp warp = new Warp(name, player.getLocation());
             pwarps.add(warp);
             warps.put(player.getName(), pwarps);
-            player.sendMessage(String.format("&7Warp '%s' has been set!", warp.getName()));
+            player.sendMessage(String.format("§7Warp '%s' has been set!", warp.getName()));
         }
     }
 
     public void delWarp(Player player, String name) {
           if (matchWarp(player.getName(), name) == null || !warps.containsKey(player.getName()) || warps.containsKey(player.getName()) && warps.get(player.getName()).isEmpty()) {
-              player.sendMessage(String.format("&cWarp '%s' does not exist!", name));
+              player.sendMessage(String.format("§cWarp '%s' does not exist!", name));
           } else {
             List<Warp> warpsp = warps.get(player.getName());
             Warp warp2rem = matchWarp(player.getName(), name);
             warpsp.remove(warp2rem);
             warps.put(player.getName(), warpsp);
-            player.sendMessage(String.format("&7Warp '%s' has been deleted.", warp2rem.getName()));
+            player.sendMessage(String.format("§7Warp '%s' has been deleted.", warp2rem.getName()));
           }
     }
 
 
     public void warp(Player player, String warp) {
         if (matchWarp(player.getName(), warp) == null || !warps.containsKey(player.getName()) || warps.containsKey(player.getName()) && warps.get(player.getName()).isEmpty()) {
-            player.sendMessage(String.format("&cWarp '%s' does not exist!", warp));
+            player.sendMessage(String.format("§cWarp '%s' does not exist!", warp));
             return;
         }
         warpTeleport(player, matchWarp(player.getName(), warp));
@@ -157,18 +157,18 @@ public class WarpManager {
     public void warpTeleport(final Player p, final Warp warp) {
             if(canTeleport(p)) {
                 p.teleport(warp.getLocation());
-                p.sendMessage(String.format("&7Warped to %s!", warp.getName()));
+                p.sendMessage(String.format("§7Warped to %s!", warp.getName()));
             } else {
                 TeamManager.getInstance().getDontMove().put(p.getName(), new BukkitRunnable() {
                     @Override
                     public void run() {
                         p.teleport(warp.getLocation());
-                        p.sendMessage(String.format("&7Warped to %s!", warp.getName()));
+                        p.sendMessage(String.format("§7Warped to %s!", warp.getName()));
                         TeamManager.getInstance().getDontMove().remove(p.getName());
                     }
                 });
                 TeamManager.getInstance().getDontMove().get(p.getName()).runTaskLater(Hardcore.getPlugin(Hardcore.class), 10*20L);
-                p.sendMessage("&7Someone is nearby! Warping in 10 seconds! Do not move!");
+                p.sendMessage("§7Someone is nearby! Warping in 10 seconds! Do not move!");
             }
     }
 
@@ -255,10 +255,10 @@ public class WarpManager {
 
            ((Player) sender).removeMetadata("warpToOverride", Hardcore.getPlugin(Hardcore.class));
 
-           sender.sendMessage(String.format("&aWarp '%s' has been overridden.", warp.getWarp().getName()));
+           sender.sendMessage(String.format("§aWarp '%s' has been overridden.", warp.getWarp().getName()));
 
        } else {
-           sender.sendMessage("&cNo warp to overwrite!");
+           sender.sendMessage("§cNo warp to overwrite!");
        }
     }
 
@@ -270,9 +270,9 @@ public class WarpManager {
             overriding.remove(sender.getName());
             ((Player) sender).removeMetadata("warpToOverride", Hardcore.getPlugin(Hardcore.class));
 
-            sender.sendMessage(String.format("&cNot overriding warp '%s'.", warp.getWarp().getName()));
+            sender.sendMessage(String.format("§cNot overriding warp '%s'.", warp.getWarp().getName()));
         } else {
-            sender.sendMessage("&cNo warp to overwrite!");
+            sender.sendMessage("§cNo warp to overwrite!");
         }
     }
 

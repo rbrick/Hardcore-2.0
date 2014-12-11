@@ -38,9 +38,9 @@ public class CombatTag implements Listener {
                 damaged.sendMessage(ChatColor.RED + "You are now in combat!");
                 final Scoreboard scoreboard = damaged.getScoreboard();
                 Objective objective = scoreboard.getObjective("ct") == null ? scoreboard.registerNewObjective("ct", "dummy") : scoreboard.getObjective("ct");
-                objective.setDisplayName("&6Timers");
+                objective.setDisplayName("§6Timers");
                 objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-                final Score combatTag = objective.getScore("&aCombat Tag");
+                final Score combatTag = objective.getScore("§aCombat Tag");
                 combatTag.setScore(60);
                 // damaged.setScoreboard(scoreboard);
                 inCombatTag.put(damaged.getName(), new BukkitRunnable() {
@@ -53,7 +53,7 @@ public class CombatTag implements Listener {
                             } else {
                                 inCombat.remove(damaged.getName());
                                 damaged.sendMessage(ChatColor.GREEN + "You are no longer in combat.");
-                                scoreboard.resetScores("&aCombat Tag");
+                                scoreboard.resetScores("§aCombat Tag");
                                 this.cancel();
                                 inCombatTag.remove(damager.getName());
                             }
@@ -66,9 +66,9 @@ public class CombatTag implements Listener {
                 damager.sendMessage(ChatColor.RED + "You are now in combat!");
                 final Scoreboard scoreboard2 = damager.getScoreboard();
                 Objective objective2 = scoreboard2.getObjective("ct") == null ? scoreboard2.registerNewObjective("ct", "dummy") : scoreboard2.getObjective("ct");
-                objective2.setDisplayName("&6Timers");
+                objective2.setDisplayName("§6Timers");
                 objective2.setDisplaySlot(DisplaySlot.SIDEBAR);
-                final Score combatTag2 = objective2.getScore("&aCombat Tag");
+                final Score combatTag2 = objective2.getScore("§aCombat Tag");
                 combatTag2.setScore(60);
             //    damager.setScoreboard(scoreboard2);
                 inCombatTag.put(damager.getName(), new BukkitRunnable() {
@@ -82,7 +82,7 @@ public class CombatTag implements Listener {
                             } else {
                                 inCombat.remove(damager.getName());
                                 damager.sendMessage(ChatColor.GREEN + "You are no longer in combat.");
-                                scoreboard2.resetScores("&aCombat Tag");
+                                scoreboard2.resetScores("§aCombat Tag");
                                 this.cancel();
                                 inCombatTag.remove(damager.getName());
                             }
@@ -111,9 +111,9 @@ public class CombatTag implements Listener {
                     damaged.sendMessage(ChatColor.RED + "You are now in combat!");
                     final Scoreboard scoreboard = damaged.getScoreboard();
                     Objective objective = scoreboard.getObjective("ct") == null ? scoreboard.registerNewObjective("ct", "dummy") : scoreboard.getObjective("ct");
-                    objective.setDisplayName("&6Timers");
+                    objective.setDisplayName("§6Timers");
                     objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-                    final Score combatTag = objective.getScore("&aCombat Tag");
+                    final Score combatTag = objective.getScore("§aCombat Tag");
                     combatTag.setScore(60);
                     // damaged.setScoreboard(scoreboard);
                     inCombatTag.put(damaged.getName(), new BukkitRunnable() {
@@ -126,7 +126,7 @@ public class CombatTag implements Listener {
                                 } else {
                                     inCombat.remove(damaged.getName());
                                     damaged.sendMessage(ChatColor.GREEN + "You are no longer in combat.");
-                                    scoreboard.resetScores("&aCombat Tag");
+                                    scoreboard.resetScores("§aCombat Tag");
                                     this.cancel();
                                     inCombatTag.remove(damager.getName());
                                 }
@@ -139,9 +139,9 @@ public class CombatTag implements Listener {
                     damager.sendMessage(ChatColor.RED + "You are now in combat!");
                     final Scoreboard scoreboard2 = damager.getScoreboard();
                     Objective objective2 = scoreboard2.getObjective("ct") == null ? scoreboard2.registerNewObjective("ct", "dummy") : scoreboard2.getObjective("ct");
-                    objective2.setDisplayName("&6Timers");
+                    objective2.setDisplayName("§6Timers");
                     objective2.setDisplaySlot(DisplaySlot.SIDEBAR);
-                    final Score combatTag2 = objective2.getScore("&aCombat Tag");
+                    final Score combatTag2 = objective2.getScore("§aCombat Tag");
                     combatTag2.setScore(60);
                     //    damager.setScoreboard(scoreboard2);
                     inCombatTag.put(damager.getName(), new BukkitRunnable() {
@@ -155,7 +155,7 @@ public class CombatTag implements Listener {
                                 } else {
                                     inCombat.remove(damager.getName());
                                     damager.sendMessage(ChatColor.GREEN + "You are no longer in combat.");
-                                    scoreboard2.resetScores("&aCombat Tag");
+                                    scoreboard2.resetScores("§aCombat Tag");
                                     this.cancel();
                                     inCombatTag.remove(damager.getName());
                                 }

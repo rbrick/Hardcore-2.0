@@ -25,7 +25,7 @@ public class RegionManager implements Listener {
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
         if(selectionMode.contains(event.getPlayer().getName())) {
-           if(event.getItem() != null && event.getItem().equals(Material.STICK)) {
+           if(event.getItem() != null&&event.getItem().equals(Material.STICK)) {
 
            }
         }

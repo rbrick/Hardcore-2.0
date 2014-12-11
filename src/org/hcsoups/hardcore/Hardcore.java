@@ -153,7 +153,7 @@ public class Hardcore extends JavaPlugin {
         db.getMongo().close();
     }
 
-    @Command(name="track", usage = "&c/track [Player/All]", minArgs = 1)
+    @Command(name="track", usage = "§c/track [Player/All]", minArgs = 1)
     public void track(CommandSender sender, String[] args) {
         if(!(sender instanceof Player)) {
             return;
@@ -162,7 +162,7 @@ public class Hardcore extends JavaPlugin {
 
             if(p.getWorld().getEnvironment().equals(World.Environment.NETHER) || p.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
                 String env = p.getWorld().getEnvironment().equals(World.Environment.NETHER) ? "the nether." : "the end.";
-                p.sendMessage("&cTracking is disabled in " + env);
+                p.sendMessage("§cTracking is disabled in " + env);
                 return;
             }
 
@@ -173,7 +173,7 @@ public class Hardcore extends JavaPlugin {
             } else {
                 Player tracked = Bukkit.getPlayer(args[0]);
                 if (tracked == null) {
-                    sender.sendMessage("&cCould not find \"" + args[0] + "\"");
+                    sender.sendMessage("§cCould not find \"" + args[0] + "\"");
                 } else {
                     track.setLoc(p.getLocation().getBlockX(), p.getLocation().getBlockY() - 1, p.getLocation().getBlockZ());
                     track.Track(p, tracked);

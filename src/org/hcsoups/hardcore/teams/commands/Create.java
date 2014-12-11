@@ -22,12 +22,12 @@ public class Create extends TeamSubCommand {
     public void execute(final Player p, String[] args) {
         // 0 = create, 1 = name, 2 = pass
         if (args.length == 0 || args.length > 2) {
-            p.sendMessage("&c/team create <Name> [Password]");
+            p.sendMessage("§c/team create <Name> [Password]");
             return;
         }
 
         if(TeamManager.getInstance().isOnTeam(p.getName())) {
-            p.sendMessage("&cYou are already in a team!");
+            p.sendMessage("§cYou are already in a team!");
             return;
         }
 

@@ -20,14 +20,14 @@ public class Roster extends TeamSubCommand {
     @Override
     public void execute(Player p, String[] args) {
         if(args.length != 1) {
-            p.sendMessage("&c/team roster [Team]");
+            p.sendMessage("§c/team roster [Team]");
             return;
         }
 
         Team team = TeamManager.getInstance().matchTeam(args[0]);
 
         if(team == null) {
-         p.sendMessage("&cTeam '" + args[0] + "' does not exist!");
+         p.sendMessage("§cTeam '" + args[0] + "' does not exist!");
          return;
         }
         TeamManager.getInstance().sendInfo(p, team);

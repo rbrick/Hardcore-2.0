@@ -99,7 +99,7 @@ public class SpawnManager implements Listener {
        if(spawn != null) {
            if (!spawn.contains(event.getPlayer().getLocation()) && haveSpawnprot.contains(event.getPlayer().getName())) {
                haveSpawnprot.remove(event.getPlayer().getName());
-               event.getPlayer().sendMessage("&7You no longer have spawn protection!");
+               event.getPlayer().sendMessage("§7You no longer have spawn protection!");
            }
        }
     }
@@ -111,7 +111,7 @@ public class SpawnManager implements Listener {
        if(spawn != null) {
            event.getPlayer().teleport(new Location(Bukkit.getWorld("world"), 0, spawn.getY(), 0));
            haveSpawnprot.add(event.getPlayer().getName());
-           event.getPlayer().sendMessage("&7You have regained spawn protection!");
+           event.getPlayer().sendMessage("§7You have regained spawn protection!");
        }
     }
     @EventHandler
@@ -206,25 +206,25 @@ public class SpawnManager implements Listener {
 
     public void spawnTeleport(final Player p) {
         if (spawn == null) {
-            p.sendMessage("&cSpawn has not been set up yet!");
+            p.sendMessage("§cSpawn has not been set up yet!");
             return;
         }
         if(TeamManager.getInstance().canTeleport(p)) {
             p.teleport(new Location(Bukkit.getWorld("world"), 0, spawn.getY(), 0));
-            p.sendMessage("&7You have regained spawn protection!");
+            p.sendMessage("§7You have regained spawn protection!");
             haveSpawnprot.add(p.getName());
         } else {
             TeamManager.getInstance().getDontMove().put(p.getName(), new BukkitRunnable() {
                 @Override
                 public void run() {
                     p.teleport(new Location(Bukkit.getWorld("world"), 0, spawn.getY(), 0));
-                    p.sendMessage("&7You have regained spawn protection!");
+                    p.sendMessage("§7You have regained spawn protection!");
                     haveSpawnprot.add(p.getName());
                     TeamManager.getInstance().getDontMove().remove(p.getName());
                 }
             });
             TeamManager.getInstance().getDontMove().get(p.getName()).runTaskLater(Hardcore.getPlugin(Hardcore.class), 10*20L);
-            p.sendMessage("&7Someone is nearby! Warping in 10 seconds! Do not move!");
+            p.sendMessage("§7Someone is nearby! Warping in 10 seconds! Do not move!");
         }
     }
 

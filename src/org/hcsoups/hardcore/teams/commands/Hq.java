@@ -17,7 +17,7 @@ public class Hq extends TeamSubCommand {
     @Override
     public void execute(Player p, String[] args) {
         if(args.length != 0) {
-            p.sendMessage("&c/team hq");
+            p.sendMessage("§c/team hq");
             return;
         } else {
             TeamManager.getInstance().teamTeleport(p, "hq", TeamManager.getInstance().getPlayerTeam(p).getHq());

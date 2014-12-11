@@ -261,17 +261,17 @@ public class TrackingMethods {
                 // sbm = new StringBuilder("{\"text\":\"" + compass + " (" + num
                 // + "):\",\"color\":\"dark_aqua\",\"extra\":[{\"text\":\" " +
                 // ChatColor.stripColor(in.get(0))+
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"&aClick here to track &f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"§aClick here to track §f'"
                 // + in.get(0)+
-                // "&f'&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "§f'§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // +ChatColor.stripColor(in.get(0)) + "\"}}");
                 // if (in.size() > 1) {
                 // for (int i = 1; i < in.size(); i++) {
                 // sbm.append(",{\"text\":\", \",\"color\":\"gray\"}").append(",{\"text\":\""
                 // + ChatColor.stripColor(in.get(i)) +
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"&aClick here to track &f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"§aClick here to track §f'"
                 // + in.get(i) +
-                // "&f'&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "§f'§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // + ChatColor.stripColor(in.get(i)) + "\"}}");
                 // }
                 // }
@@ -301,17 +301,17 @@ public class TrackingMethods {
                 // sbm = new StringBuilder("{\"text\":\"" + compass + " (" + num
                 // + "):\",\"color\":\"dark_aqua\",\"extra\":[{\"text\":\" " +
                 // ChatColor.stripColor(in.get(0))+
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
                 // + in.get(0)+
-                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // +ChatColor.stripColor(in.get(0)) + "\"}}");
                 // if (in.size() > 1) {
                 // for (int i = 1; i < in.size(); i++) {
                 // sbm.append(",{\"text\":\", \",\"color\":\"gray\"}").append(",{\"text\":\""
                 // + ChatColor.stripColor(in.get(i)) +
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
                 // + in.get(i) +
-                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // + ChatColor.stripColor(in.get(i)) + "\"}}");
                 // }
                 // }
@@ -341,17 +341,17 @@ public class TrackingMethods {
                 // sbm = new StringBuilder("{\"text\":\"" + compass + " (" + num
                 // + "):\",\"color\":\"dark_aqua\",\"extra\":[{\"text\":\" " +
                 // ChatColor.stripColor(in.get(0))+
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
                 // + in.get(0)+
-                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // +ChatColor.stripColor(in.get(0)) + "\"}}");
                 // if (in.size() > 1) {
                 // for (int i = 1; i < in.size(); i++) {
                 // sbm.append(",{\"text\":\", \",\"color\":\"gray\"}").append(",{\"text\":\""
                 // + ChatColor.stripColor(in.get(i)) +
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
                 // + in.get(i) +
-                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // + ChatColor.stripColor(in.get(i)) + "\"}}");
                 // }
                 // }
@@ -381,17 +381,17 @@ public class TrackingMethods {
                 // sbm = new StringBuilder("{\"text\":\"" + compass + " (" + num
                 // + "):\",\"color\":\"dark_aqua\",\"extra\":[{\"text\":\" " +
                 // ChatColor.stripColor(in.get(0))+
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
                 // + in.get(0)+
-                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // +ChatColor.stripColor(in.get(0)) + "\"}}");
                 // if (in.size() > 1) {
                 // for (int i = 1; i < in.size(); i++) {
                 // sbm.append(",{\"text\":\", \",\"color\":\"gray\"}").append(",{\"text\":\""
                 // + ChatColor.stripColor(in.get(i)) +
-                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â&aClick here to track Â&f'"
+                // "\",\"color\":\"gray\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Â§aClick here to track Â§f'"
                 // + in.get(i) +
-                // "Â&f'Â&a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
+                // "Â§f'Â§a.\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/track "
                 // + ChatColor.stripColor(in.get(i)) + "\"}}");
                 // }
                 // }
@@ -461,22 +461,22 @@ public class TrackingMethods {
 //        boolean westDists = findEnd(player.getWorld(), 1, 0, mat1, mat2);
 //
 //        player.sendMessage(ChatColor.DARK_AQUA + "Results:");
-//        if (northDist > 0 && northDists) {
+//        if (northDist > 0 §§ northDists) {
 //            TrackDirAll(player, 0, -northDist * 25, player2);
 //        }
 //
-//        if (eastDist > 0 && eastDists) {
+//        if (eastDist > 0 §§ eastDists) {
 //            TrackDirAll(player, -eastDist * 25, 0, player2);
 //        }
-//        if (southDist > 0 && southDists) {
+//        if (southDist > 0 §§ southDists) {
 //
 //            TrackDirAll(player, 0, southDist * 25, player2);
 //        }
-//        if (westDist > 0 && westDists) {
+//        if (westDist > 0 §§ westDists) {
 //            TrackDirAll(player, westDist * 25, 0, player2);
 //        }
         // Cannot track all on a temp tracker
-        // if ((block.getType() == Material.OBSIDIAN) && isTemp(player, block))
+        // if ((block.getType() == Material.OBSIDIAN) §§ isTemp(player, block))
         // {
         // player.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND,
         // block.getData());

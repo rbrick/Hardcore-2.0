@@ -21,7 +21,7 @@ public class Leave extends TeamSubCommand {
     @Override
     public void execute(final Player p, String[] args) {
          if(args.length > 0) {
-             p.sendMessage("&c/team leave");
+             p.sendMessage("§c/team leave");
              return;
          } else {
             new BukkitRunnable() {

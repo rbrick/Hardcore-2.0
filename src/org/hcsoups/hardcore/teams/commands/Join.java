@@ -22,7 +22,7 @@ public class Join extends TeamSubCommand {
     @Override
     public void execute(final Player p, String[] args) {
         if (args.length == 0 || args.length > 2) {
-            p.sendMessage("&c/team join <Team> [Password]");
+            p.sendMessage("§c/team join <Team> [Password]");
             return;
         } else {
             if (args.length == 1) {

@@ -24,14 +24,14 @@ public class Demote extends TeamSubCommand {
     @Override
     public void execute(Player p, String[] args) {
         if(args.length != 1) {
-            p.sendMessage("&c/team demote <Player>");
+            p.sendMessage("§c/team demote <Player>");
             return;
         }
         if(!TeamManager.getInstance().isOnTeam(p.getName())) {
-            p.sendMessage("&cYou are not on a team!");
+            p.sendMessage("§cYou are not on a team!");
             return;
         } else if (!TeamManager.getInstance().isManager(p)) {
-            p.sendMessage("&cYou must be at least a manager to perform this command.");
+            p.sendMessage("§cYou must be at least a manager to perform this command.");
             return;
 
         } else {
@@ -41,20 +41,20 @@ public class Demote extends TeamSubCommand {
             Team argsTeam = TeamManager.getInstance().getPlayerTeam(args[0]);
 
             if(argsTeam == null) {
-                p.sendMessage("&cThat player is not on a team.");
+                p.sendMessage("§cThat player is not on a team.");
                 return;
             } else if(!playerTeam.equals(argsTeam)) {
-                p.sendMessage("&cThat player is not on your team!");
+                p.sendMessage("§cThat player is not on your team!");
                 return;
             } else {
 
                 if(p.getName().equals(args[0])) {
-                    p.sendMessage("&cYou cannot demote your self!");
+                    p.sendMessage("§cYou cannot demote your self!");
                     return;
                 }
                 // Trying to promote a manager
                 if(playerTeam.getMembers().contains(args[0])) {
-                    p.sendMessage("&cPlayer '" + args[0] + "' is already a member!");
+                    p.sendMessage("§cPlayer '" + args[0] + "' is already a member!");
                     return;
                 }
 
@@ -62,7 +62,7 @@ public class Demote extends TeamSubCommand {
                 playerTeam.getMembers().add(args[0]);
 
                // TeamManager.getInstance().saveTeam(playerTeam);
-                TeamManager.getInstance().messageTeam(playerTeam, "&3" + p.getName() + " has demoted '" + args[0] + "'.");
+                TeamManager.getInstance().messageTeam(playerTeam, "§3" + p.getName() + " has demoted '" + args[0] + "'.");
 
                 new BukkitRunnable() {
                     @Override

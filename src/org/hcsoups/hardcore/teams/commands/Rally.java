@@ -18,7 +18,7 @@ public class Rally extends TeamSubCommand{
     @Override
     public void execute(Player p, String[] args) {
         if(args.length != 0) {
-            p.sendMessage("&c/team rally");
+            p.sendMessage("§c/team rally");
             return;
         } else {
             TeamManager.getInstance().teamTeleport(p, "rally", TeamManager.getInstance().getPlayerTeam(p).getRally());
