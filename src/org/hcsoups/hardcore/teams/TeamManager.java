@@ -1,14 +1,14 @@
 package org.hcsoups.hardcore.teams;
 
 import com.mongodb.*;
-import lombok.experimental.Builder;
 import mkremins.fanciful.FancyMessage;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -17,14 +17,16 @@ import org.hcsoups.hardcore.Hardcore;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import redis.clients.jedis.Jedis;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class TeamManager implements Listener {
@@ -48,16 +50,26 @@ public class TeamManager implements Listener {
 
     HashMap<String, Long> onCooldown = new HashMap<String, Long>();
 
-    Jedis db = Hardcore.getPlugin(Hardcore.class).getJedis();
+//    Jedis db = Hardcore.getPlugin(Hardcore.class).getJedis();
+
+    DBCollection collection;
+    DBCollection players;
 
     long interval = 600000;
 
-    protected static TeamManager instance = new TeamManager();
+    protected TeamManager() {
+        collection = Hardcore.getPlugin(Hardcore.class).getMongo().getCollection("teams");
+        players = Hardcore.getPlugin(Hardcore.class).getMongo().getCollection("players");
+    }
+
+    
+    private static TeamManager instance = new TeamManager();
 
     public static TeamManager getInstance() {
         return instance;
     }
-
+    
+    
     public Team createTeam(Player player, String name, String password) {
         if (!name.matches(isValid.pattern())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('§',"§cInvalid name!"));
@@ -692,7 +704,7 @@ public class TeamManager implements Listener {
     // Used when the team has no more players left.
     public void disbandTeam(Team team) {
         File teamFile = new File(Hardcore.getPlugin(Hardcore.class).getTeamsFolder(), team.getName() + ".json");
-        TeamManager.getInstance().updateTeam(team, TeamAction.REMOVE);
+        updateTeam(team, TeamAction.REMOVE);
         teams.remove(team);
         saveTeams();
         System.gc();
@@ -794,28 +806,45 @@ public class TeamManager implements Listener {
     }
 
     public void updatePlayer(Player player, Team team) {
-        db.hset("team_players", player.getName(), team.getName());
-        db.save();
+        updatePlayer(player.getName(), team);
     }
 
     public void updatePlayer(String player, Team team) {
-        db.hset("team_players", player, team.getName());
-        db.save();
+          DBCursor cursor = players.find(new BasicDBObject(player, team.getName()));
+
+          if(cursor.hasNext()) {
+              DBObject object = cursor.next();
+              object.put(player, team.getName());
+              players.save(object);
+          } else {
+              BasicDBObject object = new BasicDBObject();
+              object.put(player, team.getName());
+              players.save(object);
+          }
+
+//        db.hset("team_players", player, team.getName());
+//        db.save();
     }
 
     public void removePlayer(String player) {
-        if (db.hexists("team_players", player)) {
-            db.hdel("team_players", player);
-            db.save();
-        } else {
+         Team team = getPlayerTeam(player);
+        if(team == null) {
             System.out.println(player + " was not found in the database!");
+        } else {
+            DBCursor cursor = players.find(new BasicDBObject(player, team.getName()));
+
+            if (cursor.hasNext()) {
+                collection.remove(cursor.next());
+            } else {
+                System.out.println(player + " was not found in the database!");
+            }
+
         }
+
     }
 
     public void updateTeam(Team team, TeamAction action) {
         if (action.equals(TeamAction.UPDATE)) {
-
-            DBCollection collection = Hardcore.getPlugin(Hardcore.class).getMongo().getCollection("teams");
 
             DBCursor cursor = collection.find(new BasicDBObject("name", team.getName()));
 
@@ -866,51 +895,10 @@ public class TeamManager implements Listener {
                 collection.insert(teamObject);
             }
 
-//            db.hdel("team_" + team.getName(), "members", "managers");
-//            HashMap<String, String> hash = new HashMap<String, String>();
-//
-//            //   hash.put("leader", team.getLeader());
-//
-//            JSONArray managersArray = new JSONArray();
-//
-//            if (!team.getManagers().isEmpty()) {
-//                for (String managers : team.getManagers()) {
-//                    managersArray.add(managers);
-//                    db.hset("team_" + team.getName(), "managers", managers);
-//                }
-//                hash.put("managers", managersArray.toString());
-//            } else {
-//                hash.put("managers", "");
-//            }
-//
-//
-//            JSONArray membersArray = new JSONArray();
-//
-//            if (!team.getMembers().isEmpty()) {
-//                for (String members : team.getMembers()) {
-//                    membersArray.add(members);
-//                    db.hset("team_" + team.getName(), "members", members);
-//                }
-//                hash.put("members", membersArray.toString());
-//
-//            } else {
-//                hash.put("members", "");
-//            }
-//
-//            System.out.println(membersArray.toString());
-//            db.save();
 
         }
 
         if (action.equals(TeamAction.REMOVE)) {
-//            if (db.exists("team_" + team.getName())) {
-//                db.hdel("team_" + team.getName(), "members", "managers");
-//                db.save();
-//            } else {
-//                System.out.println(team.getName() + " was not in the database!");
-//            }
-
-            DBCollection collection = Hardcore.getPlugin(Hardcore.class).getMongo().getCollection("teams");
 
             DBCursor cursor = collection.find(new BasicDBObject("name", team.getName()));
 
@@ -953,4 +941,6 @@ public class TeamManager implements Listener {
     public HashMap<String, BukkitRunnable> getDontMove() {
         return dontMove;
     }
+
+
 }

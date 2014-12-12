@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.hcsoups</groupId>
+    <groupId>me.rbrickis</groupId>
     <artifactId>Hardcore</artifactId>
-    <version>1.0-BETA</version>
+    <version>1.0-RELEASE</version>
     <packaging>jar</packaging>
     <name>Hardcore</name>
-    <url>http://www.hcsoups.org/</url>
+    <url>http://www.hcreborn.com/</url>
     <repositories>
         <repository>
             <id>bukkit-repo</id>
@@ -31,13 +31,6 @@
             <artifactId>lombok</artifactId>
             <version>1.14.8</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.6.0</version>
-            <type>jar</type>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>

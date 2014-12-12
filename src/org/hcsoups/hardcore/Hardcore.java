@@ -24,13 +24,11 @@ import org.hcsoups.hardcore.warps.WarpCommand;
 import org.hcsoups.hardcore.warps.WarpManager;
 import org.hcsoups.hardcore.zeus.annotations.Command;
 import org.hcsoups.hardcore.zeus.registers.bukkit.BukkitRegistrar;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.exceptions.JedisConnectionException;
 
-import javax.xml.bind.DataBindingException;
 import java.io.File;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Ryan on 11/20/2014
@@ -45,8 +43,9 @@ public class Hardcore extends JavaPlugin {
     Register register;
     File teamsFolder = new File(getDataFolder() + File.separator + "teams" + File.separator);
     File warpsFolder = new File(getDataFolder() + File.separator + "warps" + File.separator);
-    Jedis jedis = new Jedis("localhost");
-    DB db = null;
+    DB db;
+
+    static TeamManager tm;
 
 
     @Override
@@ -54,11 +53,22 @@ public class Hardcore extends JavaPlugin {
         super.onEnable();
         registrar = new BukkitRegistrar();
         register = new Register();
+
         setupTeamCommands();
+
+
+        try {
+            db = MongoClient.connect(new DBAddress("localhost", "hardcore"));
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
+
+        tm = TeamManager.getInstance();
+
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new FriendlyFireListener(), this);
         manager.registerEvents(new ChatListener(), this);
-        manager.registerEvents(TeamManager.getInstance(), this);
+        manager.registerEvents(getInstance(), this);
         manager.registerEvents(new CombatTag(), this);
         registrar.registerAll(WarpManager.getInstance());
         registrar.registerAll(new SpawnCommand());
@@ -69,6 +79,7 @@ public class Hardcore extends JavaPlugin {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
 
         if(!getDataFolder().exists()) {
             getDataFolder().mkdir();
@@ -81,17 +92,17 @@ public class Hardcore extends JavaPlugin {
         if(!warpsFolder.exists()) {
             warpsFolder.mkdir();
         }
-        if(!TeamManager.getInstance().getInTeamFile().exists()) {
+        if(!getInstance().getInTeamFile().exists()) {
             try {
-                TeamManager.getInstance().getInTeamFile().createNewFile();
+                getInstance().getInTeamFile().createNewFile();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
         System.out.println("Loading teams into memory...");
-        TeamManager.getInstance().loadTeams();
+        getInstance().loadTeams();
         System.out.println("Loading inTeams into memory...");
-        TeamManager.getInstance().loadInTeam();
+        getInstance().loadInTeam();
 
         System.out.println("Loading warps into memory...");
         WarpManager.getInstance().loadWarps();
@@ -99,17 +110,9 @@ public class Hardcore extends JavaPlugin {
         System.out.println("Loading spawn into memory...");
         SpawnManager.getInstance().loadSpawn();
 
-        try {
-            jedis.connect();
-        } catch (JedisConnectionException ex) {
-            ex.printStackTrace();
-        }
 
-        try {
-           db = MongoClient.connect(new DBAddress("localhost", "hardcore"));
-        } catch (UnknownHostException ex) {
-            ex.printStackTrace();
-        }
+
+
 
         System.out.println("Connected to database!");
         System.out.println("\n");
@@ -142,14 +145,13 @@ public class Hardcore extends JavaPlugin {
     @Override
     public void onDisable() {
         // Just in case
-        TeamManager.getInstance().saveInTeam();
-        TeamManager.getInstance().saveTeams();
+        getInstance().saveInTeam();
+        getInstance().saveTeams();
 
         WarpManager.getInstance().saveWarps();
 
         SpawnManager.getInstance().saveSpawn();
-        jedis.save();
-        jedis.disconnect();
+
         db.getMongo().close();
     }
 
@@ -187,10 +189,6 @@ public class Hardcore extends JavaPlugin {
     }
 
 
-    public Jedis getJedis() {
-        return jedis;
-    }
-
     public File getTeamsFolder() {
         return teamsFolder;
     }
@@ -201,6 +199,10 @@ public class Hardcore extends JavaPlugin {
 
     public DB getMongo() {
         return db;
+    }
+
+    public static TeamManager getInstance() {
+        return tm;
     }
 
 
