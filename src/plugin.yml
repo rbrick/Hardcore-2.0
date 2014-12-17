@@ -1,5 +1,5 @@
 main: org.hcsoups.hardcore.Hardcore
-name: ${project.name}-${project.version}
+name: ${project.name}
 version: ${project.version}
 website: ${project.url}
-authors: ["§cHCReborn Development"]
+authors: ["§crbrick"]

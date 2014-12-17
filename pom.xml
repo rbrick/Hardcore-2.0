@@ -6,7 +6,7 @@
     <version>1.0-RELEASE</version>
     <packaging>jar</packaging>
     <name>Hardcore</name>
-    <url>http://www.hcreborn.com/</url>
+    <url>http://www.breakmc.com/</url>
     <repositories>
         <repository>
             <id>bukkit-repo</id>
@@ -93,5 +93,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

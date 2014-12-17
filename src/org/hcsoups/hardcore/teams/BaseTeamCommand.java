@@ -26,7 +26,7 @@ public class BaseTeamCommand extends BaseCommand {
             "§7/team demote <Player> - Demote a player to member","§7/team sethq - Sets the teams headquarters","§7/team setrally - Sets the teams rally point"};
 
     public BaseTeamCommand(Hardcore main) {
-        super("team","", "t");
+        super("team",null, "t");
 
         this.main = main;
         setMinArgs(1);
@@ -41,6 +41,7 @@ public class BaseTeamCommand extends BaseCommand {
         }
 
         setUsage(builder.toString());
+
     }
 
     public TeamSubCommand getSubCommand(String key) {

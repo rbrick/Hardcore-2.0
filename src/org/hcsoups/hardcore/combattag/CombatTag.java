@@ -179,14 +179,14 @@ public class CombatTag implements Listener {
         String name = p.getName();
 
         if(inCombat.containsKey(p.getName()) && inCombatTag.containsKey(name)) {
-            if(p.hasPermission("hcsoups.combattag.bypass")) {
+            if(p.hasPermission("breakmc.combattag.bypass")) {
                 return;
             }
-
            p.setHealth(0);
            inCombat.remove(p.getName());
            inCombatTag.get(name).cancel();
            inCombatTag.remove(name);
+           p.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
     }
     @EventHandler
@@ -199,9 +199,13 @@ public class CombatTag implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         if (inCombat.containsKey(event.getEntity().getName()) && inCombatTag.containsKey(event.getEntity().getName())) {
+
             inCombat.remove(event.getEntity().getName());
+
             inCombatTag.get(event.getEntity().getName()).cancel();
+
             inCombatTag.remove(event.getEntity().getName());
+
             event.getEntity().getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
     }
