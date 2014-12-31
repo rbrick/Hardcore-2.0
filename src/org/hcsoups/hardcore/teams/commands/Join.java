@@ -30,11 +30,8 @@ public class Join extends TeamSubCommand {
                 boolean success = TeamManager.getInstance().joinTeam(args[0], "", p);
 
                 if (success) {
-
                     TeamManager.getInstance().updatePlayer(p, TeamManager.getInstance().getPlayerTeam(p));
                     TeamManager.getInstance().updateTeam(TeamManager.getInstance().getPlayerTeam(p), TeamAction.UPDATE);
-
-
                 }
                 return;
             }

@@ -20,7 +20,7 @@ public class Hq extends TeamSubCommand {
             p.sendMessage("§c/team hq");
             return;
         } else {
-            TeamManager.getInstance().teamTeleport(p, "hq", TeamManager.getInstance().getPlayerTeam(p).getHq());
+            TeamManager.getInstance().teamTeleport(p, "HQ", TeamManager.getInstance().getPlayerTeam(p).getHq());
         }
     }
 }

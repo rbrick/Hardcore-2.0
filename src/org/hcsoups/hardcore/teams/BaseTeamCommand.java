@@ -99,10 +99,15 @@ public class BaseTeamCommand extends BaseCommand {
         } else {
             try {
                 TeamSubCommand tc = getSubCommand(args[0]);
+                if(tc == null) {
+                    sender.sendMessage("§cUnrecognized team command!\nDo /team for help.");
+                    return;
+                }
                 tc.execute(((Player) sender), fixArgs(args));
                 return;
             } catch (Exception ex) {
-               sender.sendMessage("§cUnrecognized team command!\nDo /team for help.");
+               sender.sendMessage("§cAn unexpected error occured: " + ex.getLocalizedMessage() + "\nContact an admin!");
+                ex.printStackTrace();
             }
         }
         return;

@@ -214,6 +214,10 @@ public class SpawnManager implements Listener {
             p.sendMessage("§7You have regained spawn protection!");
             haveSpawnprot.add(p.getName());
         } else {
+            if(TeamManager.getInstance().getDontMove().containsKey(p.getName())) {
+                TeamManager.getInstance().getDontMove().get(p.getName()).cancel();
+                System.out.println("Cancelling timer for " + p.getName());
+            }
             TeamManager.getInstance().getDontMove().put(p.getName(), new BukkitRunnable() {
                 @Override
                 public void run() {

@@ -159,6 +159,10 @@ public class WarpManager {
                 p.teleport(warp.getLocation());
                 p.sendMessage(String.format("§7Warped to %s!", warp.getName()));
             } else {
+                if(TeamManager.getInstance().getDontMove().containsKey(p.getName())) {
+                    TeamManager.getInstance().getDontMove().get(p.getName()).cancel();
+                    System.out.println("Cancelling timer for " + p.getName());
+                }
                 TeamManager.getInstance().getDontMove().put(p.getName(), new BukkitRunnable() {
                     @Override
                     public void run() {
@@ -179,7 +183,7 @@ public class WarpManager {
                 Player near = (Player) ent;
                 if(near.equals(p)) continue;
 
-                if(TeamManager.getInstance().getPlayerTeam(near) != null) {
+                if(TeamManager.getInstance().isOnTeam(near.getName()) && TeamManager.getInstance().isOnTeam(p.getName())) {
                     if(TeamManager.getInstance().getPlayerTeam(p).equals(TeamManager.getInstance().getPlayerTeam(near))) {
                         continue;
                     } else {

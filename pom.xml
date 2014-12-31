@@ -5,7 +5,7 @@
     <artifactId>Hardcore</artifactId>
     <version>1.0-RELEASE</version>
     <packaging>jar</packaging>
-    <name>Hardcore</name>
+    <name>Daybreak</name>
     <url>http://www.breakmc.com/</url>
     <repositories>
         <repository>
@@ -13,6 +13,10 @@
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
 
+        <repository>
+            <id>comphenix-repo</id>
+            <url>http://repo.comphenix.net/content/groups/public/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -42,9 +46,12 @@
             <artifactId>gson</artifactId>
             <version>2.3.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>3.4.0</version>
+        </dependency>
     </dependencies>
-
     <build>
         <finalName>${project.name}</finalName>
         <sourceDirectory>src/</sourceDirectory>

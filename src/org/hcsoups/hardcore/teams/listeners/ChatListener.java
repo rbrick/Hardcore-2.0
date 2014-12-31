@@ -20,7 +20,10 @@ public class ChatListener implements Listener {
             } else {
                 name = "§7" + name;
              }
-            TeamManager.getInstance().messageTeam(TeamManager.getInstance().getPlayerTeam(event.getPlayer()), String.format("§7[%s]§f<%s§f> §f%s", TeamManager.getInstance().getPlayerTeam(event.getPlayer()).getName(),name, event.getMessage()));
+            TeamManager.getInstance().messageTeam(TeamManager.getInstance().getPlayerTeam(event.getPlayer()), String.format("§3(%s) %s§f: %s", TeamManager.getInstance().getPlayerTeam(event.getPlayer()).getName(),name, event.getMessage()));
+
+
+
         }
     }
 }

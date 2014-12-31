@@ -2,8 +2,6 @@ package org.hcsoups.hardcore.teams.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.hcsoups.hardcore.Hardcore;
 import org.hcsoups.hardcore.teams.TeamAction;
 import org.hcsoups.hardcore.teams.TeamManager;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
@@ -33,10 +31,12 @@ public class Kick extends TeamSubCommand {
                 } else if (p.getName().equals(args[0])) {
                     p.sendMessage("§cYou cannot kick yourself!");
                 } else {
+
                     TeamManager.getInstance().getPlayerTeam(p).getManagers().remove(args[0]);
                     TeamManager.getInstance().getPlayerTeam(p).getMembers().remove(args[0]);
                     TeamManager.getInstance().messageTeam(TeamManager.getInstance().getPlayerTeam(p), "§3" + p.getName() + " has kicked '" + args[0] + "' from the team!");
                     //     TeamManager.getInstance().saveTeam(TeamManager.getInstance().getPlayerTeam(p));
+                    TeamManager.getInstance().removePlayer(args[0]); // bam
                     TeamManager.getInstance().getInTeam().remove(args[0]);
                     //    TeamManager.getInstance().saveInTeam();
                     TeamManager.getInstance().getTeamChat().remove(args[0]);
@@ -45,7 +45,7 @@ public class Kick extends TeamSubCommand {
                     }
 
                     TeamManager.getInstance().updateTeam(TeamManager.getInstance().getPlayerTeam(p), TeamAction.UPDATE);
-                    TeamManager.getInstance().removePlayer(args[0]);
+
 
 
                 }

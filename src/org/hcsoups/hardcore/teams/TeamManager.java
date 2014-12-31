@@ -1,6 +1,8 @@
 package org.hcsoups.hardcore.teams;
 
 import com.mongodb.*;
+import lombok.AccessLevel;
+import lombok.Getter;
 import mkremins.fanciful.FancyMessage;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -23,10 +25,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class TeamManager implements Listener {
@@ -49,6 +48,9 @@ public class TeamManager implements Listener {
     HashMap<String, BukkitRunnable> dontMove = new HashMap<String, BukkitRunnable>();
 
     HashMap<String, Long> onCooldown = new HashMap<String, Long>();
+
+   @Getter(AccessLevel.PUBLIC)
+   HashSet<File> filesToDelete = new HashSet<>();
 
 //    Jedis db = Hardcore.getPlugin(Hardcore.class).getJedis();
 
@@ -189,9 +191,49 @@ public class TeamManager implements Listener {
         List<String> options = matchPlayer(name);
 
         if(options.size() <= 0) {
-            player.sendMessage("§cCould not find player '" + name + "'.");
-            return;
-        }
+            // See if the player is
+            if(getPlayerTeam(name) != null) {
+                Team team = getPlayerTeam(name);
+
+                if (team == null) { // always false
+                    player.sendMessage("§cPlayer '" + name + "' is not on a team.");
+                    return;
+                }
+
+                if (getPlayerTeam(player) != null && getPlayerTeam(player).equals(team)) {
+                    sendInfo(player);
+                    return;
+                } else {
+                    player.sendMessage("§7***§3" + team.getName() + "§7***");
+
+                    if (team.getManagers().size() >= 1) {
+                        for (String man : team.getManagers()) {
+                            Player manp = Bukkit.getPlayer(man);
+                            if (manp != null) {
+                                player.sendMessage(" §3" + man + " §7- " + formatHealth((manp.getHealth())));
+                            } else {
+                                player.sendMessage(" §3" + man + " §7- Offline");
+                            }
+                        }
+                    }
+                    if (team.getMembers().size() >= 1) {
+                        for (String mem : team.getMembers()) {
+                            Player memp = Bukkit.getPlayer(mem);
+                            if (memp != null) {
+                                player.sendMessage(" §7" + mem + " - " + formatHealth((memp.getHealth())));
+                            } else {
+                                player.sendMessage(" §7" + mem + " - Offline");
+                            }
+                        }
+                    }
+                    return;
+                }
+            } else {
+                player.sendMessage("§cCould not find player '" + name + "'.");
+                return;
+
+            }
+         }
 
         if (options.size() > 1) {
             FancyMessage message = new FancyMessage("Did you mean: ").color(ChatColor.DARK_AQUA).then();
@@ -212,6 +254,7 @@ public class TeamManager implements Listener {
         }
 
 
+
         Team team = getPlayerTeam(options.get(0));
 
         if (team == null) {
@@ -229,7 +272,7 @@ public class TeamManager implements Listener {
                 for (String man : team.getManagers()) {
                     Player manp = Bukkit.getPlayer(man);
                     if (manp != null) {
-                        player.sendMessage(" §3" + man + " §7- Health: " + formatHealth((manp.getHealth() * 5)) + "%");
+                        player.sendMessage(" §3" + man + " §7- " + formatHealth((manp.getHealth())));
                     } else {
                         player.sendMessage(" §3" + man + " §7- Offline");
                     }
@@ -239,7 +282,7 @@ public class TeamManager implements Listener {
                 for (String mem : team.getMembers()) {
                     Player memp = Bukkit.getPlayer(mem);
                     if (memp != null) {
-                        player.sendMessage(" §7" + mem + " - Health: " + formatHealth((memp.getHealth() * 5)) + "%");
+                        player.sendMessage(" §7" + mem + " - " + formatHealth((memp.getHealth())));
                     } else {
                         player.sendMessage(" §7" + mem + " - Offline");
                     }
@@ -265,7 +308,7 @@ public class TeamManager implements Listener {
                 for (String man : team.getManagers()) {
                     Player manp = Bukkit.getPlayer(man);
                     if (manp != null) {
-                        player.sendMessage(" §3" + man + " §7- Health: " + formatHealth((manp.getHealth() * 5)) + "%");
+                        player.sendMessage(" §3" + man + " §7- " + formatHealth((manp.getHealth())));
                     } else {
                         player.sendMessage(" §3" + man + " §7- Offline");
                     }
@@ -275,7 +318,7 @@ public class TeamManager implements Listener {
                 for (String mem : team.getMembers()) {
                     Player memp = Bukkit.getPlayer(mem);
                     if (memp != null) {
-                        player.sendMessage(" §7" + mem + " - Health: " + formatHealth((memp.getHealth() * 5)) + "%");
+                        player.sendMessage(" §7" + mem + " - " + formatHealth((memp.getHealth())));
                     } else {
                         player.sendMessage(" §7" + mem + " - Offline");
                     }
@@ -293,17 +336,17 @@ public class TeamManager implements Listener {
         Team team = inTeam.get(player.getName());
 
         player.sendMessage("§7***§3" + team.getName() + "§7***");
-        player.sendMessage("§7Password: " + (team.getPassword().isEmpty() || team.getPassword().equals("") ? "Not Set" : team.getPassword()));
+        player.sendMessage("§7Password: " + (team.getPassword().isEmpty() || team.getPassword().equals("") ? "§cNot Set" : "§a" + team.getPassword()));
+        player.sendMessage("§7Team HQ: " + (team.getHq() == null ? "§cNot Set" : "§aSet"));
+        player.sendMessage("§7Team Rally: " + (team.getRally() == null ? "§cNot Set" : "§aSet"));
         player.sendMessage("§7Friendly Fire is " + (team.isFriendlyFire() ? "§con" : "§aoff"));
-        player.sendMessage("§7Team HQ: " + (team.getHq() == null ? "Not Set" : "Set"));
-        player.sendMessage("§7Team Rally: " + (team.getRally() == null ? "Not Set" : "Set"));
         player.sendMessage("§7Members: ");
 
         if (team.getManagers().size() >= 1) {
             for (String man : team.getManagers()) {
                 Player manp = Bukkit.getPlayer(man);
                 if (manp != null) {
-                    player.sendMessage(" §3" + man + " §7- Health: " + formatHealth((manp.getHealth() * 5)) + "%");
+                    player.sendMessage(" §3" + man + " §7- " + formatHealth((manp.getHealth())));
                 } else {
                     player.sendMessage(" §3" + man + " §7- Offline");
                 }
@@ -313,7 +356,7 @@ public class TeamManager implements Listener {
             for (String mem : team.getMembers()) {
                 Player memp = Bukkit.getPlayer(mem);
                 if (memp != null) {
-                    player.sendMessage(" §7" + mem + " - Health: " + formatHealth((memp.getHealth() * 5)) + "%");
+                    player.sendMessage(" §7" + mem + " - " + formatHealth((memp.getHealth())));
                 } else {
                     player.sendMessage(" §7" + mem + " - Offline");
                 }
@@ -321,9 +364,19 @@ public class TeamManager implements Listener {
         }
     }
 
+
+
     String formatHealth(double health) {
-        DecimalFormat format = new DecimalFormat("#.##");
-        return format.format(health);
+        double hearts = health/2;
+        DecimalFormat format = new DecimalFormat("#.#");
+
+        if(hearts <= 10 && hearts >= 8) {
+             return String.format("§a%s ❤", format.format(hearts));
+        } else if (hearts <= 7 && hearts >= 4) {
+            return String.format("§e%s ❤", format.format(hearts));
+        } else {
+            return String.format("§c%s ❤", format.format(hearts));
+        }
     }
 
     public boolean doesTeamExist(String name) {
@@ -497,7 +550,13 @@ public class TeamManager implements Listener {
     public void saveTeam(Team team) {
         File file = new File(Hardcore.getPlugin(Hardcore.class).getTeamsFolder(), team.getName() + ".json");
 
+
         if (file.exists()) {
+            // Prevents lag.
+            if(filesToDelete.contains(file)) {
+                return;
+            }
+
             try {
                 JSONObject object = new JSONObject();
                 JSONArray members = new JSONArray();
@@ -621,17 +680,20 @@ public class TeamManager implements Listener {
             team.getManagers().remove(player.getName());
             if (team.getManagers().size() <= 0 && team.getMembers().size() <= 0) {
                 disbandTeam(team);
+                removePlayer(player.getName());
                 inTeam.remove(player.getName());
                 teamChat.remove(player.getName());
-                player.sendMessage("§3Your team was disbanded because there were no more members or managers left!");
+                player.sendMessage("§3Successfully left and disbanded team!");
                 return;
             }
             messageTeam(team, "§3" + player.getName() + " has left the team!");
             player.sendMessage("§3You have left the team!");
+            removePlayer(player.getName());
             //    saveTeam(team);
             inTeam.remove(player.getName());
             //   saveInTeam();
             teamChat.remove(player.getName());
+
             updateTeam(team, TeamAction.UPDATE);
         }
     }
@@ -706,19 +768,20 @@ public class TeamManager implements Listener {
         File teamFile = new File(Hardcore.getPlugin(Hardcore.class).getTeamsFolder(), team.getName() + ".json");
         updateTeam(team, TeamAction.REMOVE);
         teams.remove(team);
-        saveTeams();
-        System.gc();
+//        saveTeams();
+  //      System.gc();
         if (teamFile.exists()) {
-            if(teamFile.delete()) {
-                System.out.println("Deleted file!");
-            }
+//            if(teamFile.delete()) {
+//                System.out.println("Deleted file!");
+//            }
+             filesToDelete.add(teamFile);
         } else {
             System.out.println("No team file found. Not deleting.");
         }
 
     }
 
-    public void teamTeleport(final Player p, String locName, final Location loc) {
+    public void teamTeleport(final Player p, final String locName, final Location loc) {
         if (getPlayerTeam(p) == null) {
             p.sendMessage("§cYou are not on a team!");
             return;
@@ -732,11 +795,18 @@ public class TeamManager implements Listener {
 
 
             } else {
+
+                if(dontMove.containsKey(p.getName())) {
+                    dontMove.get(p.getName()).cancel();
+                    System.out.println("Cancelling timer for " + p.getName());
+
+                }
                 dontMove.put(p.getName(), new BukkitRunnable() {
                     @Override
                     public void run() {
                         p.teleport(loc);
                         dontMove.remove(p.getName());
+                        p.sendMessage(String.format("§7Warped to your team's %s!", locName));
                     }
                 });
                 dontMove.get(p.getName()).runTaskLater(Hardcore.getPlugin(Hardcore.class), 10 * 20L);
@@ -811,15 +881,14 @@ public class TeamManager implements Listener {
 
     public void updatePlayer(String player, Team team) {
           DBCursor cursor = players.find(new BasicDBObject(player, team.getName()));
-
           if(cursor.hasNext()) {
               DBObject object = cursor.next();
               object.put(player, team.getName());
-              players.save(object);
+              players.update(cursor.getQuery(), object);
           } else {
               BasicDBObject object = new BasicDBObject();
               object.put(player, team.getName());
-              players.save(object);
+              players.insert(object);
           }
 
 //        db.hset("team_players", player, team.getName());
@@ -832,9 +901,10 @@ public class TeamManager implements Listener {
             System.out.println(player + " was not found in the database!");
         } else {
             DBCursor cursor = players.find(new BasicDBObject(player, team.getName()));
-
+            boolean next = cursor.hasNext();
+            System.out.println(next);
             if (cursor.hasNext()) {
-                collection.remove(cursor.next());
+                players.remove(cursor.next());
             } else {
                 System.out.println(player + " was not found in the database!");
             }
@@ -845,14 +915,9 @@ public class TeamManager implements Listener {
 
     public void updateTeam(Team team, TeamAction action) {
         if (action.equals(TeamAction.UPDATE)) {
-
             DBCursor cursor = collection.find(new BasicDBObject("name", team.getName()));
-
             if (cursor.hasNext()) {
-                // Do not insert
-
                 DBObject teamObject = cursor.next();
-
                 BasicDBList membersList = new BasicDBList();
                 BasicDBList managersList = new BasicDBList();
                 if (!team.getMembers().isEmpty()) {
@@ -860,17 +925,15 @@ public class TeamManager implements Listener {
                         membersList.add(members);
                     }
                 }
-
                 if(!team.getManagers().isEmpty()) {
                     for (String managers : team.getManagers()) {
                         managersList.add(managers);
                     }
                 }
-
                 teamObject.put("members", membersList);
                 teamObject.put("managers", managersList);
                 cursor.close();
-                collection.insert(teamObject);
+                collection.update(cursor.getQuery(),teamObject);
             } else {
                 cursor.close();
                 BasicDBObject teamObject = new BasicDBObject();
@@ -894,7 +957,6 @@ public class TeamManager implements Listener {
                 teamObject.append("managers", managersList);
                 collection.insert(teamObject);
             }
-
 
         }
 
@@ -925,13 +987,13 @@ public class TeamManager implements Listener {
             return strings;
         }
 
-        for (Player names : Bukkit.getOnlinePlayers()) {
-            if (names.getName().toLowerCase().equalsIgnoreCase(arg.toLowerCase())) {
+        for (String names : inTeam.keySet()) {
+            if (names.toLowerCase().equalsIgnoreCase(arg.toLowerCase())) {
                 strings.clear(); // Clears any previous matches because this one matches
-                strings.add(names.getName());
+                strings.add(names);
                 break;
-            } else if(names.getName().toLowerCase().startsWith(arg.toLowerCase())) {
-                 strings.add(names.getName());
+            } else if(names.toLowerCase().startsWith(arg.toLowerCase())) {
+                 strings.add(names);
                  continue;
              }
         }

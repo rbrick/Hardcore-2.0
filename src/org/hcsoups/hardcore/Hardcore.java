@@ -11,8 +11,11 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.hcsoups.hardcore.combattag.CombatTag;
 import org.hcsoups.hardcore.command.Register;
+import org.hcsoups.hardcore.listeners.DeathListener;
+import org.hcsoups.hardcore.listeners.JoinListener;
 import org.hcsoups.hardcore.spawn.SpawnCommand;
 import org.hcsoups.hardcore.spawn.SpawnManager;
+import org.hcsoups.hardcore.stats.StatManager;
 import org.hcsoups.hardcore.teams.BaseTeamCommand;
 import org.hcsoups.hardcore.teams.TeamManager;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
@@ -36,6 +39,16 @@ import java.util.List;
  * Project: HCSoups
  */
 public class Hardcore extends JavaPlugin {
+
+    /**
+     * TODO:
+     *   Add death hologram
+     *   Improve scoreboards.
+     *   Fix combat tag(Part of improving scoreboards)
+     *   Fix tab completion for teams.
+     *   Add tab completing for warps.
+     *
+     */
 
     public List<TeamSubCommand> tcommands = new LinkedList<TeamSubCommand>();
 
@@ -70,6 +83,8 @@ public class Hardcore extends JavaPlugin {
         manager.registerEvents(new ChatListener(), this);
         manager.registerEvents(getInstance(), this);
         manager.registerEvents(new CombatTag(), this);
+        manager.registerEvents(new DeathListener(), this);
+        manager.registerEvents(new JoinListener(), this);
         registrar.registerAll(WarpManager.getInstance());
         registrar.registerAll(new SpawnCommand());
         registrar.registerAll(this);
@@ -80,6 +95,7 @@ public class Hardcore extends JavaPlugin {
             ex.printStackTrace();
         }
 
+        StatManager.getInstance().loadStats();
 
         if(!getDataFolder().exists()) {
             getDataFolder().mkdir();
@@ -111,15 +127,11 @@ public class Hardcore extends JavaPlugin {
         SpawnManager.getInstance().loadSpawn();
 
 
-
-
-
         System.out.println("Connected to database!");
         System.out.println("\n");
         System.out.println("\n");
         System.out.println("\n");
         System.out.println("Hardcore is ready...");
-
 
     }
 
@@ -151,6 +163,16 @@ public class Hardcore extends JavaPlugin {
         WarpManager.getInstance().saveWarps();
 
         SpawnManager.getInstance().saveSpawn();
+
+        StatManager.getInstance().saveStats();
+
+        for (File f : getInstance().getFilesToDelete()) {
+            if (f.delete()) { //
+                System.out.println("File deleted!");
+                System.out.println("File deleted!");
+                System.out.println("File deleted!");
+            }
+        }
 
         db.getMongo().close();
     }

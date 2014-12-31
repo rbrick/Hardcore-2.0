@@ -37,7 +37,7 @@ public class CombatTag implements Listener {
             if(!inCombat.containsKey(damaged.getName())) {
                 damaged.sendMessage(ChatColor.RED + "You are now in combat!");
                 final Scoreboard scoreboard = damaged.getScoreboard();
-                Objective objective = scoreboard.getObjective("ct") == null ? scoreboard.registerNewObjective("ct", "dummy") : scoreboard.getObjective("ct");
+                Objective objective = scoreboard.getObjective("timers") == null ? scoreboard.registerNewObjective("timers", "dummy") : scoreboard.getObjective("timers");
                 objective.setDisplayName("§6Timers");
                 objective.setDisplaySlot(DisplaySlot.SIDEBAR);
                 final Score combatTag = objective.getScore("§aCombat Tag");
@@ -65,7 +65,7 @@ public class CombatTag implements Listener {
             if(!inCombat.containsKey(damager.getName())) {
                 damager.sendMessage(ChatColor.RED + "You are now in combat!");
                 final Scoreboard scoreboard2 = damager.getScoreboard();
-                Objective objective2 = scoreboard2.getObjective("ct") == null ? scoreboard2.registerNewObjective("ct", "dummy") : scoreboard2.getObjective("ct");
+                Objective objective2 = scoreboard2.getObjective("timers") == null ? scoreboard2.registerNewObjective("timers", "dummy") : scoreboard2.getObjective("timers");
                 objective2.setDisplayName("§6Timers");
                 objective2.setDisplaySlot(DisplaySlot.SIDEBAR);
                 final Score combatTag2 = objective2.getScore("§aCombat Tag");
@@ -192,7 +192,12 @@ public class CombatTag implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+
+        Objective objective = scoreboard.registerNewObjective("timers", "dummy");
+        objective.setDisplayName("§6Timers");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         e.getPlayer().setScoreboard(scoreboard);
+
     }
 
 
