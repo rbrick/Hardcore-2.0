@@ -98,8 +98,6 @@ public class DeathListener implements Listener {
         stat.setDeaths(stat.getDeaths() + 1);
         stat.setKdr();
         StatManager.getInstance().updateStats(event.getEntity().getName(), stat);
-        logBattle(event.getEntity());
-
 
         if(event.getEntity().getKiller() != null) {
          //   Bukkit.broadcastMessage("Killer: " + event.getEntity().getKiller().getName());
@@ -107,20 +105,36 @@ public class DeathListener implements Listener {
             stat1.setKills(stat1.getKills() + 1);
             stat1.setKdr();
             StatManager.getInstance().updateStats(event.getEntity().getKiller().getName(), stat1);
-            logBattle(event.getEntity().getKiller());
+            logFight(event.getEntity(), event.getEntity().getKiller());
         }
 
     }
 
 
+    public void logFight(Player player, Player player1) {
+        BasicDBObject object = new BasicDBObject();
+
+        BasicDBObject killedObject = new BasicDBObject();
+        killedObject.put("stats", logInventory(player));
+
+        BasicDBObject killerObject = new BasicDBObject();
+        killerObject.put("stats", logInventory(player1));
+
+        object.append("killed", killedObject);
+        object.append("killer", killerObject);
+        object.append("time", new SimpleDateFormat("MM/dd/yyyy hh:mm:ss").format(new Date()));
+
+        deaths.insert(object, WriteConcern.NORMAL);
+
+    }
+
 
     @Todo("Change this method to logPlayer and make it return a DBObject. then create another method logBattle which serializes the inventory" +
           "and inserts it into the database.")
-    public void logBattle(Player player) {
+    public BasicDBObject logInventory(Player player) {
         BasicDBObject object = new BasicDBObject()
                 .append("name", player.getName())
                 .append("uuid", player.getUniqueId().toString())
-                .append("time", new SimpleDateFormat("MM/dd/yyyy hh:mm:ss").format(new Date()))
                 .append("health", player.getHealth())
                 .append("hunger", player.getFoodLevel());
 
@@ -192,7 +206,7 @@ public class DeathListener implements Listener {
         }
         object.append("armor", armor);
         object.append("hotbar", items);
-        deaths.insert(object, WriteConcern.NORMAL);
+        return object;
     }
 
 

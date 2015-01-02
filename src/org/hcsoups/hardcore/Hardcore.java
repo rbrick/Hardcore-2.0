@@ -10,9 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.hcsoups.hardcore.combattag.CombatTag;
+import org.hcsoups.hardcore.combattag.CombatTagHandler;
 import org.hcsoups.hardcore.command.Register;
 import org.hcsoups.hardcore.listeners.DeathListener;
 import org.hcsoups.hardcore.listeners.JoinListener;
+import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
 import org.hcsoups.hardcore.spawn.SpawnCommand;
 import org.hcsoups.hardcore.spawn.SpawnManager;
 import org.hcsoups.hardcore.stats.StatManager;
@@ -58,7 +60,10 @@ public class Hardcore extends JavaPlugin {
     File warpsFolder = new File(getDataFolder() + File.separator + "warps" + File.separator);
     DB db;
 
+    ScoreboardHandler handler;
+
     static TeamManager tm;
+
 
 
     @Override
@@ -66,8 +71,10 @@ public class Hardcore extends JavaPlugin {
         super.onEnable();
         registrar = new BukkitRegistrar();
         register = new Register();
+        handler = new ScoreboardHandler();
 
         setupTeamCommands();
+
 
 
         try {
@@ -82,9 +89,10 @@ public class Hardcore extends JavaPlugin {
         manager.registerEvents(new FriendlyFireListener(), this);
         manager.registerEvents(new ChatListener(), this);
         manager.registerEvents(getInstance(), this);
-        manager.registerEvents(new CombatTag(), this);
+        manager.registerEvents(new CombatTagHandler(), this);
         manager.registerEvents(new DeathListener(), this);
         manager.registerEvents(new JoinListener(), this);
+        manager.registerEvents(new org.hcsoups.hardcore.listeners.ChatListener(), this);
         registrar.registerAll(WarpManager.getInstance());
         registrar.registerAll(new SpawnCommand());
         registrar.registerAll(this);
@@ -227,5 +235,7 @@ public class Hardcore extends JavaPlugin {
         return tm;
     }
 
-
+    public ScoreboardHandler getHandler() {
+        return handler;
+    }
 }

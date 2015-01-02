@@ -240,5 +240,12 @@ public class TimeUtils {
         return System.currentTimeMillis() - from > required;
     }
 
+    public static String getMMSS(final int seconds) {
+        final int millis = seconds * 1000;
+        final int sec = millis / 1000 % 60;
+        final int min = millis / 60000 % 60;
+        final int hr = millis / 3600000 % 24;
+        return ((hr > 0) ? String.format("%02d", hr) : "") + String.format("%02d:%02d", min, sec);
+    }
 
 }

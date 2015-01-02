@@ -43,73 +43,73 @@ public class SpawnCommand {
         }
     }
 
-    @Command(name="spawnview")
-    public void spawnview(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
-
-            List<Block> blocks = new ArrayList<>();
-
-            if(viewingSpawn.contains(p.getName())) {
-                for (int y = SpawnManager.getInstance().getSpawn().getY(); y < 256; y++) {
-                    Location loc1 =  SpawnManager.getInstance().getSpawn().getCorner1();
-                    Location loc2 =  SpawnManager.getInstance().getSpawn().getCorner2();
-                    Location loc3 =  SpawnManager.getInstance().getSpawn().getCorner3();
-                    Location loc4 =  SpawnManager.getInstance().getSpawn().getCorner4();
-
-                    loc1.setY(y);
-                    loc2.setY(y);
-                    loc3.setY(y);
-                    loc4.setY(y);
-
-                    if(y % 5 == 0) {
-                        p.sendBlockChange(loc1, Material.AIR, (byte) 0);
-                        p.sendBlockChange(loc2, Material.AIR, (byte) 0);
-                        p.sendBlockChange(loc3, Material.AIR, (byte) 0);
-                        p.sendBlockChange(loc4, Material.AIR, (byte) 0);
-                    } else {
-                        p.sendBlockChange(loc1, Material.AIR, (byte) 0);
-                        p.sendBlockChange(loc2, Material.AIR, (byte) 0);
-                        p.sendBlockChange(loc3, Material.AIR, (byte) 0);
-                        p.sendBlockChange(loc4, Material.AIR, (byte) 0);
-                    }
-                }
-
-                viewingSpawn.remove(p.getName());
-            } else {
-
-               if(SpawnManager.getInstance().getSpawn() == null) {
-                   sender.sendMessage("§cSpawn has not been set yet!");
-                   return;
-               }
-                for (int y = SpawnManager.getInstance().getSpawn().getY(); y < 256; y++) {
-                       Location loc1 =  SpawnManager.getInstance().getSpawn().getCorner1();
-                       Location loc2 =  SpawnManager.getInstance().getSpawn().getCorner2();
-                       Location loc3 =  SpawnManager.getInstance().getSpawn().getCorner3();
-                       Location loc4 =  SpawnManager.getInstance().getSpawn().getCorner4();
-
-                    loc1.setY(y);
-                    loc2.setY(y);
-                    loc3.setY(y);
-                    loc4.setY(y);
-
-                    if(y % 5 == 0) {
-                        p.sendBlockChange(loc1, Material.EMERALD_BLOCK, (byte) 0);
-                        p.sendBlockChange(loc2, Material.EMERALD_BLOCK, (byte) 0);
-                        p.sendBlockChange(loc3, Material.EMERALD_BLOCK, (byte) 0);
-                        p.sendBlockChange(loc4, Material.EMERALD_BLOCK, (byte) 0);
-                    } else {
-                        p.sendBlockChange(loc1, Material.GLASS, (byte) 0);
-                        p.sendBlockChange(loc2, Material.GLASS, (byte) 0);
-                        p.sendBlockChange(loc3, Material.GLASS, (byte) 0);
-                        p.sendBlockChange(loc4, Material.GLASS, (byte) 0);
-                    }
-                }
-
-                viewingSpawn.add(p.getName());
-            }
-        }
-    }
+//    @Command(name="spawnview")
+//    public void spawnview(CommandSender sender, String[] args) {
+//        if (sender instanceof Player) {
+//            Player p = (Player) sender;
+//
+//            List<Block> blocks = new ArrayList<>();
+//
+//            if(viewingSpawn.contains(p.getName())) {
+//                for (int y = SpawnManager.getInstance().getSpawn().getY(); y < 256; y++) {
+//                    Location loc1 =  SpawnManager.getInstance().getSpawn().getCorner1();
+//                    Location loc2 =  SpawnManager.getInstance().getSpawn().getCorner2();
+//                    Location loc3 =  SpawnManager.getInstance().getSpawn().getCorner3();
+//                    Location loc4 =  SpawnManager.getInstance().getSpawn().getCorner4();
+//
+//                    loc1.setY(y);
+//                    loc2.setY(y);
+//                    loc3.setY(y);
+//                    loc4.setY(y);
+//
+//                    if(y % 5 == 0) {
+//                        p.sendBlockChange(loc1, Material.AIR, (byte) 0);
+//                        p.sendBlockChange(loc2, Material.AIR, (byte) 0);
+//                        p.sendBlockChange(loc3, Material.AIR, (byte) 0);
+//                        p.sendBlockChange(loc4, Material.AIR, (byte) 0);
+//                    } else {
+//                        p.sendBlockChange(loc1, Material.AIR, (byte) 0);
+//                        p.sendBlockChange(loc2, Material.AIR, (byte) 0);
+//                        p.sendBlockChange(loc3, Material.AIR, (byte) 0);
+//                        p.sendBlockChange(loc4, Material.AIR, (byte) 0);
+//                    }
+//                }
+//
+//                viewingSpawn.remove(p.getName());
+//            } else {
+//
+//               if(SpawnManager.getInstance().getSpawn() == null) {
+//                   sender.sendMessage("§cSpawn has not been set yet!");
+//                   return;
+//               }
+//                for (int y = SpawnManager.getInstance().getSpawn().getY(); y < 256; y++) {
+//                       Location loc1 =  SpawnManager.getInstance().getSpawn().getCorner1();
+//                       Location loc2 =  SpawnManager.getInstance().getSpawn().getCorner2();
+//                       Location loc3 =  SpawnManager.getInstance().getSpawn().getCorner3();
+//                       Location loc4 =  SpawnManager.getInstance().getSpawn().getCorner4();
+//
+//                    loc1.setY(y);
+//                    loc2.setY(y);
+//                    loc3.setY(y);
+//                    loc4.setY(y);
+//
+//                    if(y % 5 == 0) {
+//                        p.sendBlockChange(loc1, Material.EMERALD_BLOCK, (byte) 0);
+//                        p.sendBlockChange(loc2, Material.EMERALD_BLOCK, (byte) 0);
+//                        p.sendBlockChange(loc3, Material.EMERALD_BLOCK, (byte) 0);
+//                        p.sendBlockChange(loc4, Material.EMERALD_BLOCK, (byte) 0);
+//                    } else {
+//                        p.sendBlockChange(loc1, Material.GLASS, (byte) 0);
+//                        p.sendBlockChange(loc2, Material.GLASS, (byte) 0);
+//                        p.sendBlockChange(loc3, Material.GLASS, (byte) 0);
+//                        p.sendBlockChange(loc4, Material.GLASS, (byte) 0);
+//                    }
+//                }
+//
+//                viewingSpawn.add(p.getName());
+//            }
+//        }
+//    }
 
 
 //    @Command(name="clearspawn", aliases = {"cs"})

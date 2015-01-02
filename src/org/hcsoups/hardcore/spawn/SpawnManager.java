@@ -200,7 +200,7 @@ public class SpawnManager implements Listener {
         if(event.getPlayer().getBedSpawnLocation() != null) {
             return;
         }
-        event.setRespawnLocation(new Location(Bukkit.getWorld("world"), 0, spawn.getY(), 0));
+        event.setRespawnLocation(new Location(Bukkit.getWorld("world"), 0.5, spawn.getY(), 0.5));
         haveSpawnprot.add(event.getPlayer().getName());
     }
 
@@ -210,7 +210,7 @@ public class SpawnManager implements Listener {
             return;
         }
         if(TeamManager.getInstance().canTeleport(p)) {
-            p.teleport(new Location(Bukkit.getWorld("world"), 0, spawn.getY(), 0));
+            p.teleport(new Location(Bukkit.getWorld("world"), 0.5, spawn.getY(), 0.5));
             p.sendMessage("§7You have regained spawn protection!");
             haveSpawnprot.add(p.getName());
         } else {
@@ -221,7 +221,7 @@ public class SpawnManager implements Listener {
             TeamManager.getInstance().getDontMove().put(p.getName(), new BukkitRunnable() {
                 @Override
                 public void run() {
-                    p.teleport(new Location(Bukkit.getWorld("world"), 0, spawn.getY(), 0));
+                    p.teleport(new Location(Bukkit.getWorld("world"), 0.5, spawn.getY(), 0.5));
                     p.sendMessage("§7You have regained spawn protection!");
                     haveSpawnprot.add(p.getName());
                     TeamManager.getInstance().getDontMove().remove(p.getName());
