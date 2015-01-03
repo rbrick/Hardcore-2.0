@@ -39,6 +39,8 @@ public class ScoreboardHandler {
 
     public void remove(final Player player) {
         this.boards.remove(player.getName());
+
+
     }
 
     public void add(final Player player) {

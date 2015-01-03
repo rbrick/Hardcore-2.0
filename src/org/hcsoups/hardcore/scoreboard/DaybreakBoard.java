@@ -43,6 +43,10 @@ public class DaybreakBoard {
             final String title = getter.getTitle(this.player);
             if (seconds == -1) {
                 if (this.displayScores.contains(title)) {
+//                    if(title.contains("§a§lCombat Tag")) {
+//                       player.sendMessage("§aYou are no longer in combat!");
+//                    }
+
                     this.obj.getScoreboard().resetScores(title);
                     this.displayScores.remove(title);
                 }
@@ -50,7 +54,7 @@ public class DaybreakBoard {
                 this.displayScores.add(title);
                 this.obj.getScore(title).setScore(nextVal);
                 this.getTeam(title, seconds).addPlayer(Bukkit.getOfflinePlayer(title));
-                System.out.println(getter.getTitle(this.player) + " - " + getter.getTime(this.player));
+            //    System.out.println(getter.getTitle(this.player) + " - " + getter.getTime(this.player));
                 --nextVal;
             }
         }

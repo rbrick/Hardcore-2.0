@@ -8,6 +8,9 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.hcsoups.hardcore.Hardcore;
@@ -29,11 +32,13 @@ import java.util.List;
  * <p/>
  * Project: HCSoups
  */
-public class WarpManager {
+public class WarpManager implements Listener {
 
     private HashMap<String, List<Warp>> warps = new HashMap<String, List<Warp>>();
 
     private HashMap<String, BukkitRunnable> overriding = new HashMap<String, BukkitRunnable>();
+
+    private List<String> cantAttack = new ArrayList<>();
 
     static WarpManager instance = new WarpManager();
 
@@ -69,6 +74,11 @@ public class WarpManager {
         message.send(player);
     }
 
+    public void warpAdmin(Player player,String toCheck, Warp warp) {
+         player.sendMessage("§7Warped to " + toCheck +"'s " + warp.getName());
+         player.teleport(warp.getLocation());
+    }
+
 
     public void listWarpsAdmin(Player player, String name) {
          if (matchPlayer(name) == null) {
@@ -98,7 +108,7 @@ public class WarpManager {
 
     public void setWarp(final Player player, String name) {
 
-        if (!name.matches("^[A-Za-z0-9_]*$")) {
+        if (!name.matches("^[A-Za-z0-9_+-]*$")) {
             player.sendMessage("§cInvalid warp name!");
             return;
         }
@@ -145,12 +155,21 @@ public class WarpManager {
     }
 
 
-    public void warp(Player player, String warp) {
+    public void warp(final Player player, String warp) {
         if (matchWarp(player.getName(), warp) == null || !warps.containsKey(player.getName()) || warps.containsKey(player.getName()) && warps.get(player.getName()).isEmpty()) {
             player.sendMessage(String.format("§cWarp '%s' does not exist!", warp));
             return;
         }
         warpTeleport(player, matchWarp(player.getName(), warp));
+//        player.sendMessage("§7You cannot attack for 10 seconds!");
+//        cantAttack.add(player.getName());
+//        new BukkitRunnable() {
+//            @Override
+//            public void run() {
+//              cantAttack.remove(player.getName());
+//            }
+//        }.runTaskLater(Hardcore.getPlugin(Hardcore.class), 10 * 20L);
+
     }
 
 
@@ -200,19 +219,31 @@ public class WarpManager {
 
 
     public int warpSize(Player player) {
-        int warpCount;
-        if(player.hasPermission("hcsoups.warps.pro")) {
-            warpCount = 30;
-        } else if(player.hasPermission("hcsoups.warps.mvp")) {
-            warpCount = 20;
-        } else if(player.hasPermission("hcsoups.warps.vip")) {
-            warpCount = 10;
+        int warpCount = 0;
+//        if(player.hasPermission("hcsoups.warps.pro")) {
+//            warpCount = 30;
+//        } else if(player.hasPermission("hcsoups.warps.mvp")) {
+//            warpCount = 20;
+//        } else if(player.hasPermission("hcsoups.warps.vip")) {
+//            warpCount = 10;
+//        } else {
+//            warpCount = 5;
+//        }
+//        if (player.hasPermission("hcsoups.warps.registered")) {
+//            warpCount += 3;
+//        }
+
+        if(player.isOp() || player.hasPermission("warps.admin")) {
+            warpCount = 100;
         } else {
-            warpCount = 5;
+
+            for (int i = 0; i < 100; i++) {
+                if (player.hasPermission("warps." + i)) {
+                    warpCount = i;
+                }
+            }
         }
-        if (player.hasPermission("hcsoups.warps.registered")) {
-            warpCount += 3;
-        }
+
         return warpCount;
     }
 
@@ -360,6 +391,16 @@ public class WarpManager {
     private class TempWarp {
         Warp warp;
         Location loc;
+    }
+
+
+    @EventHandler
+    public void atck(EntityDamageByEntityEvent event) {
+        if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
+            if(cantAttack.contains(((Player) event.getDamager()).getName())) {
+                event.setCancelled(true);
+            }
+        }
     }
 
 }

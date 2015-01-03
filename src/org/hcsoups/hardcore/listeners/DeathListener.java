@@ -1,5 +1,7 @@
 package org.hcsoups.hardcore.listeners;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -12,9 +14,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.hcsoups.hardcore.Hardcore;
+import org.hcsoups.hardcore.combattag.CombatTagHandler;
 import org.hcsoups.hardcore.stats.Stat;
 import org.hcsoups.hardcore.stats.StatManager;
+import org.hcsoups.hardcore.teams.TeamManager;
 import org.hcsoups.hardcore.utils.annotations.Todo;
 
 import java.text.SimpleDateFormat;
@@ -98,6 +103,7 @@ public class DeathListener implements Listener {
         stat.setDeaths(stat.getDeaths() + 1);
         stat.setKdr();
         StatManager.getInstance().updateStats(event.getEntity().getName(), stat);
+        CombatTagHandler.inCombat.remove(event.getEntity().getName());
 
         if(event.getEntity().getKiller() != null) {
          //   Bukkit.broadcastMessage("Killer: " + event.getEntity().getKiller().getName());
@@ -106,6 +112,44 @@ public class DeathListener implements Listener {
             stat1.setKdr();
             StatManager.getInstance().updateStats(event.getEntity().getKiller().getName(), stat1);
             logFight(event.getEntity(), event.getEntity().getKiller());
+
+
+            final Hologram holo = HologramsAPI.createHologram(Hardcore.getPlugin(Hardcore.class), event.getEntity().getEyeLocation());
+
+            String bothOnTeam = "§f%s §3(%s) §ckilled §f%s §3(%s)";
+            String killerOnTeam = "§f%s §3(%s) §ckilled §f%s";
+            String killedOnTeam = "§f%s §ckilled §f%s §3(%s)";
+            String notOnTeam = "§f%s §ckilled §f%s";
+
+            String killedTeam = "";
+
+            String killerTeam = "";
+
+            if(TeamManager.getInstance().isOnTeam(event.getEntity().getName())) {
+                  killedTeam = TeamManager.getInstance().getPlayerTeam(event.getEntity()).getName();
+            }
+
+            if(TeamManager.getInstance().isOnTeam(event.getEntity().getKiller().getName())) {
+                killerTeam = TeamManager.getInstance().getPlayerTeam(event.getEntity().getKiller()).getName();
+            }
+
+            if(!killedTeam.isEmpty() && !killerTeam.isEmpty()) {
+                holo.appendTextLine(String.format(bothOnTeam, event.getEntity().getKiller().getDisplayName(),  killerTeam, event.getEntity().getDisplayName(), killedTeam));
+            } else if(!killedTeam.isEmpty()) {
+                holo.appendTextLine(String.format(killedOnTeam, event.getEntity().getKiller().getDisplayName(), event.getEntity().getDisplayName(), killedTeam));
+            } else if(!killerTeam.isEmpty()) {
+                holo.appendTextLine(String.format(killerOnTeam, event.getEntity().getKiller().getDisplayName(), killerTeam, event.getEntity().getDisplayName()));
+            } else {
+               holo.appendTextLine(String.format(notOnTeam, event.getEntity().getKiller().getDisplayName(), event.getEntity().getDisplayName()));
+            }
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                   holo.delete();
+                }
+            }.runTaskLater(Hardcore.getPlugin(Hardcore.class), 10*20L);
+
         }
 
     }

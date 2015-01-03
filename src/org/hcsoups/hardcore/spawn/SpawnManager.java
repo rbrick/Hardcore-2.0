@@ -8,14 +8,12 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -46,7 +44,7 @@ public class SpawnManager implements Listener {
     File spawn_file = new File(Hardcore.getPlugin(Hardcore.class).getDataFolder(), "spawn.json");
 
 
-    @EventHandler (ignoreCancelled = true)
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onEntityDamageEvent(EntityDamageByEntityEvent e) {
         // Only call these methods if the attacked is a player
         if (e.getEntity() instanceof Player) {
@@ -82,7 +80,7 @@ public class SpawnManager implements Listener {
                             return;
                         }
 
-                        if (haveSpawnprot.contains(attacker.getName()) && !haveSpawnprot.contains(attacked) && attacker.getWorld().getName().equals("world")) {
+                        if (haveSpawnprot.contains(attacker.getName()) && !haveSpawnprot.contains(attacked.getName()) && attacker.getWorld().getName().equals("world")) {
                             attacker.sendMessage(ChatColor.GRAY + "You have lost spawn protection!");
                             haveSpawnprot.remove(attacker.getName());
                             return;
@@ -109,11 +107,24 @@ public class SpawnManager implements Listener {
             return;
         }
        if(spawn != null) {
-           event.getPlayer().teleport(new Location(Bukkit.getWorld("world"), 0, spawn.getY(), 0));
+           event.getPlayer().teleport(new Location(Bukkit.getWorld("world"), 0.5, spawn.getY(), 0.5));
            haveSpawnprot.add(event.getPlayer().getName());
            event.getPlayer().sendMessage("§7You have regained spawn protection!");
        }
     }
+
+    @EventHandler
+    public void onspw(CreatureSpawnEvent event) {
+        if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CHUNK_GEN) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if(cantSpawn(event.getLocation())) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler
     public void onEntityDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
@@ -139,7 +150,7 @@ public class SpawnManager implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (spawn.contains(event.getBlock().getLocation())) {
-             if (!event.getPlayer().isOp() || !event.getPlayer().hasPermission("hcsoups.spawn.build")) {
+             if (!event.getPlayer().isOp() || !event.getPlayer().hasPermission("spawn.build")) {
                  event.setCancelled(true);
              }
         }
@@ -149,7 +160,7 @@ public class SpawnManager implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (spawn.contains(event.getBlock().getLocation())) {
-            if (!event.getPlayer().isOp() || !event.getPlayer().hasPermission("hcsoups.spawn.build")) {
+            if (!event.getPlayer().isOp() || !event.getPlayer().hasPermission("spawn.build")) {
                 event.setCancelled(true);
             }
         }
@@ -290,6 +301,13 @@ public class SpawnManager implements Listener {
 
     }
 
+    public boolean cantSpawn(Location location) {
+        return location.getX() <= 150 && location.getX() >= -150 && location.getZ() <= 150 && location.getZ() >= -150;
+    }
+
+    public boolean hasSpawnProt(Player player) {
+        return haveSpawnprot.contains(player.getName());
+    }
 
 
     private SpawnManager() {}

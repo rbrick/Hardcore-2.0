@@ -13,7 +13,7 @@ public interface ScoreboardGetter {
     public static ScoreboardGetter COMBAT_TAG = new ScoreboardGetter() {
         @Override
         public String getTitle(Player p) {
-            return "§c§lCombat Tag";
+            return "§a§lCombat Tag";
         }
 
         @Override
@@ -29,9 +29,22 @@ public interface ScoreboardGetter {
         }
     };
 
+    public static ScoreboardGetter TELEPORT_WAIT = new ScoreboardGetter() {
+        @Override
+        public String getTitle(Player p) {
+            return "§7§lTeleport";
+        }
+
+        @Override
+        public int getTime(Player p) {
+            return -1;
+        }
+    };
+
 
     public static ScoreboardGetter[] SCORES = {
-        COMBAT_TAG
+        COMBAT_TAG,
+        TELEPORT_WAIT
     };
 
     String getTitle(Player p);

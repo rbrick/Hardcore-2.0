@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.hcsoups.hardcore.combattag.CombatTag;
 import org.hcsoups.hardcore.combattag.CombatTagHandler;
 import org.hcsoups.hardcore.command.Register;
+import org.hcsoups.hardcore.entities.CustomEntityType;
 import org.hcsoups.hardcore.listeners.DeathListener;
 import org.hcsoups.hardcore.listeners.JoinListener;
 import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
@@ -25,6 +26,7 @@ import org.hcsoups.hardcore.teams.commands.*;
 import org.hcsoups.hardcore.teams.listeners.ChatListener;
 import org.hcsoups.hardcore.teams.listeners.FriendlyFireListener;
 import org.hcsoups.hardcore.tracking.TrackingMethods;
+import org.hcsoups.hardcore.warps.WarpAdminCommand;
 import org.hcsoups.hardcore.warps.WarpCommand;
 import org.hcsoups.hardcore.warps.WarpManager;
 import org.hcsoups.hardcore.zeus.annotations.Command;
@@ -44,9 +46,9 @@ public class Hardcore extends JavaPlugin {
 
     /**
      * TODO:
-     *   Add death hologram
-     *   Improve scoreboards.
-     *   Fix combat tag(Part of improving scoreboards)
+     *   Add death hologram ✓
+     *   Improve scoreboards. ✓
+     *   Fix combat tag(Part of improving scoreboards) ✓
      *   Fix tab completion for teams.
      *   Add tab completing for warps.
      *
@@ -92,13 +94,15 @@ public class Hardcore extends JavaPlugin {
         manager.registerEvents(new CombatTagHandler(), this);
         manager.registerEvents(new DeathListener(), this);
         manager.registerEvents(new JoinListener(), this);
-        manager.registerEvents(new org.hcsoups.hardcore.listeners.ChatListener(), this);
+        manager.registerEvents(WarpManager.getInstance(), this);
+
         registrar.registerAll(WarpManager.getInstance());
         registrar.registerAll(new SpawnCommand());
         registrar.registerAll(this);
         try {
             register.registerCommand("team", new BaseTeamCommand(this));
             register.registerCommand("warp", register.constructFromAnnotation(new WarpCommand()));
+            register.registerCommand("warpas", new WarpAdminCommand());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -123,6 +127,9 @@ public class Hardcore extends JavaPlugin {
                 ex.printStackTrace();
             }
         }
+
+        CustomEntityType.registerEntities();
+
         System.out.println("Loading teams into memory...");
         getInstance().loadTeams();
         System.out.println("Loading inTeams into memory...");
@@ -181,7 +188,7 @@ public class Hardcore extends JavaPlugin {
                 System.out.println("File deleted!");
             }
         }
-
+        CustomEntityType.unregisterEntities();
         db.getMongo().close();
     }
 

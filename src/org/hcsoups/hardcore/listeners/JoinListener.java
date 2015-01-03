@@ -23,6 +23,8 @@ public class JoinListener implements Listener {
 
         Hardcore.getPlugin(Hardcore.class).getHandler().add(event.getPlayer());
 
+        event.setJoinMessage(null);
+
 
     }
 
@@ -36,6 +38,7 @@ public class JoinListener implements Listener {
         }
 
         Hardcore.getPlugin(Hardcore.class).getHandler().remove(event.getPlayer());
+        event.setQuitMessage(null);
 
     }
 }

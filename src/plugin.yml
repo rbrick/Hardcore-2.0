@@ -3,3 +3,9 @@ name: ${project.name}
 version: ${project.version}
 website: ${project.url}
 authors: ["§crbrick"]
+
+permissions:
+  warps.#:
+    description: warp.<Number of warps>
+  spawn.build:
+    default: op
