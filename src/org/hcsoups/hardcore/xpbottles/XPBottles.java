@@ -97,7 +97,7 @@ public class XPBottles implements Listener {
 			if (p.getItemInHand().getItemMeta().hasLore()) {
 				if (meta.getDisplayName().equals(ChatColor.GOLD + "XP Bottle")) {
 					event.setCancelled(true);
-					double exp = Double.parseDouble(((String) meta.getLore().get(1)).split("�f")[1]);
+					double exp = Double.parseDouble(((String) meta.getLore().get(1)).split("§f")[1]);
 					if (exp < 0.0D) {
 						ItemStack temp = p.getItemInHand().clone();
 						temp.setAmount(p.getItemInHand().getAmount() - 1);

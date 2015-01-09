@@ -1,6 +1,5 @@
 package org.hcsoups.hardcore.combattag;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,10 +18,10 @@ public class CombatTagHandler implements Listener {
 
     public static HashMap<String, Long> inCombat = new HashMap<>();
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
-            Bukkit.broadcastMessage("Cancelled");
+           // Bukkit.broadcastMessage("Cancelled");
         } else
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player damager = (Player) event.getDamager();

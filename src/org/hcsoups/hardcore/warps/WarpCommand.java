@@ -3,21 +3,26 @@ package org.hcsoups.hardcore.warps;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.hcsoups.hardcore.command.BaseCommandAnn;
-import org.hcsoups.hardcore.command.IBaseCommand;
+import org.hcsoups.hardcore.command.BaseCommand;
+import org.hcsoups.hardcore.spawn.SpawnManager;
 
 /**
  * Created by Ryan on 11/23/2014
  * <p/>
  * Project: HCSoups
  */
-public class WarpCommand implements IBaseCommand {
+public class WarpCommand extends BaseCommand {
 
-    @BaseCommandAnn(name="warp", aliases = "go", minArgs = 1,maxArgs = 2, usage = "§cInvalid /<command> usage. Try:\n" +
-            "§7/<command> <name> - Teleport to a warp, if it exists.\n" +
-            "§7/<command> list - List all your warps.\n" +
-            "§7/<command> set <name> - Set a warp at your current location.\n" +
-            "§7/<command> del <name> - Delete a warp.")
+    public WarpCommand() {
+        super("warp", null, "go");
+        setMaxArgs(2);
+        setMinArgs(1);
+        setUsage("§cInvalid /<command> usage. Try:\n" +
+                "§7/<command> <name> - Teleport to a warp, if it exists.\n" +
+                "§7/<command> list - List all your warps.\n" +
+                "§7/<command> set <name> - Set a warp at your current location.\n" +
+                "§7/<command> del <name> - Delete a warp.");
+    }
     public void execute(CommandSender sender, String[] args) {
         if(!(sender instanceof Player)) return;
         if (args.length == 1) {
@@ -31,8 +36,8 @@ public class WarpCommand implements IBaseCommand {
                     sender.sendMessage("§c/warp del <Name>");
                 } else {
 
-                    if (canPerformWarpOrWarpSet(((Player) sender).getLocation())) {
-                        sender.sendMessage("§cYou may not warp within 512 blocks of spawn.");
+                    if (SpawnManager.getInstance().getSpawn().contains(((Player) sender).getLocation())) {
+                        sender.sendMessage("§cYou may not warp within spawn.");
                         return;
                     }
 
@@ -41,8 +46,8 @@ public class WarpCommand implements IBaseCommand {
             }
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("set")) {
-                if (canPerformWarpOrWarpSet(((Player) sender).getLocation())) {
-                    sender.sendMessage("§cYou may not set warps within 512 blocks of spawn.");
+                if (SpawnManager.getInstance().getSpawn().contains(((Player) sender).getLocation())) {
+                    sender.sendMessage("§cYou may not set warps within spawn.");
                     return;
                 }
                 WarpManager.getInstance().setWarp(((Player) sender), args[1]);

@@ -21,7 +21,7 @@ public class JoinListener implements Listener {
         StatManager.getInstance().createStats(event.getPlayer());
         //event.getPlayer().setDisplayName("§c§l" + event.getPlayer().getName());
 
-        Hardcore.getPlugin(Hardcore.class).getHandler().add(event.getPlayer());
+       // Hardcore.getPlugin(Hardcore.class).getHandler().add(event.getPlayer());
 
         event.setJoinMessage(null);
 
@@ -37,7 +37,7 @@ public class JoinListener implements Listener {
             CombatTagHandler.inCombat.remove(event.getPlayer().getName());
         }
 
-        Hardcore.getPlugin(Hardcore.class).getHandler().remove(event.getPlayer());
+        //Hardcore.getPlugin(Hardcore.class).getHandler().remove(event.getPlayer());
         event.setQuitMessage(null);
 
     }

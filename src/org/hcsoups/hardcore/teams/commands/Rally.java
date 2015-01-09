@@ -21,6 +21,11 @@ public class Rally extends TeamSubCommand{
             p.sendMessage("§c/team rally");
             return;
         } else {
+
+            if(!TeamManager.getInstance().isOnTeam(p.getName())) {
+                p.sendMessage("§cYou are not on a team!");
+                return;
+            }
             TeamManager.getInstance().teamTeleport(p, "rally", TeamManager.getInstance().getPlayerTeam(p).getRally());
         }
     }

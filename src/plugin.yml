@@ -3,6 +3,7 @@ name: ${project.name}
 version: ${project.version}
 website: ${project.url}
 authors: ["§crbrick"]
+depend: [ProtocolLib]
 
 permissions:
   warps.#:

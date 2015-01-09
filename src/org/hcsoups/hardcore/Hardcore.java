@@ -9,12 +9,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.hcsoups.hardcore.combattag.CombatTag;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.hcsoups.hardcore.combattag.CombatTagHandler;
 import org.hcsoups.hardcore.command.Register;
 import org.hcsoups.hardcore.entities.CustomEntityType;
 import org.hcsoups.hardcore.listeners.DeathListener;
 import org.hcsoups.hardcore.listeners.JoinListener;
+import org.hcsoups.hardcore.mobcapture.MobCapture;
+import org.hcsoups.hardcore.salvaging.Salvage;
 import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
 import org.hcsoups.hardcore.spawn.SpawnCommand;
 import org.hcsoups.hardcore.spawn.SpawnManager;
@@ -26,9 +28,12 @@ import org.hcsoups.hardcore.teams.commands.*;
 import org.hcsoups.hardcore.teams.listeners.ChatListener;
 import org.hcsoups.hardcore.teams.listeners.FriendlyFireListener;
 import org.hcsoups.hardcore.tracking.TrackingMethods;
+import org.hcsoups.hardcore.utils.Lag;
+import org.hcsoups.hardcore.utils.LagCommand;
 import org.hcsoups.hardcore.warps.WarpAdminCommand;
 import org.hcsoups.hardcore.warps.WarpCommand;
 import org.hcsoups.hardcore.warps.WarpManager;
+import org.hcsoups.hardcore.xpbottles.XPBottles;
 import org.hcsoups.hardcore.zeus.annotations.Command;
 import org.hcsoups.hardcore.zeus.registers.bukkit.BukkitRegistrar;
 
@@ -46,12 +51,11 @@ public class Hardcore extends JavaPlugin {
 
     /**
      * TODO:
-     *   Add death hologram ✓
-     *   Improve scoreboards. ✓
-     *   Fix combat tag(Part of improving scoreboards) ✓
-     *   Fix tab completion for teams.
-     *   Add tab completing for warps.
-     *
+     * Add death hologram ✓
+     * Improve scoreboards. ✓
+     * Fix combat tag(Part of improving scoreboards) ✓
+     * Fix tab completion for teams.
+     * Add tab completing for warps.
      */
 
     public List<TeamSubCommand> tcommands = new LinkedList<TeamSubCommand>();
@@ -67,18 +71,14 @@ public class Hardcore extends JavaPlugin {
     static TeamManager tm;
 
 
-
     @Override
     public void onEnable() {
         super.onEnable();
         registrar = new BukkitRegistrar();
         register = new Register();
-        handler = new ScoreboardHandler();
+        //      handler = new ScoreboardHandler();
 
         setupTeamCommands();
-
-
-
         try {
             db = MongoClient.connect(new DBAddress("localhost", "hardcore"));
         } catch (UnknownHostException ex) {
@@ -94,33 +94,40 @@ public class Hardcore extends JavaPlugin {
         manager.registerEvents(new CombatTagHandler(), this);
         manager.registerEvents(new DeathListener(), this);
         manager.registerEvents(new JoinListener(), this);
+        manager.registerEvents(new MobCapture(), this);
+        manager.registerEvents(new XPBottles(), this);
+        manager.registerEvents(new Salvage(), this);
+        // manager.registerEvents(new MobLimiter(), this);
         manager.registerEvents(WarpManager.getInstance(), this);
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
 
         registrar.registerAll(WarpManager.getInstance());
         registrar.registerAll(new SpawnCommand());
         registrar.registerAll(this);
         try {
             register.registerCommand("team", new BaseTeamCommand(this));
-            register.registerCommand("warp", register.constructFromAnnotation(new WarpCommand()));
+            register.registerCommand("warp", new WarpCommand());
             register.registerCommand("warpas", new WarpAdminCommand());
+            register.registerCommand("lag", new LagCommand());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         StatManager.getInstance().loadStats();
 
-        if(!getDataFolder().exists()) {
+        if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
         }
 
-        if(!teamsFolder.exists()) {
+        if (!teamsFolder.exists()) {
             teamsFolder.mkdir();
         }
 
-        if(!warpsFolder.exists()) {
+        if (!warpsFolder.exists()) {
             warpsFolder.mkdir();
         }
-        if(!getInstance().getInTeamFile().exists()) {
+        if (!getInstance().getInTeamFile().exists()) {
             try {
                 getInstance().getInTeamFile().createNewFile();
             } catch (Exception ex) {
@@ -128,12 +135,18 @@ public class Hardcore extends JavaPlugin {
             }
         }
 
-        CustomEntityType.registerEntities();
+      //  CustomEntityType.registerEntities();
+        XPBottles.createRecipes();
 
         System.out.println("Loading teams into memory...");
         getInstance().loadTeams();
         System.out.println("Loading inTeams into memory...");
-        getInstance().loadInTeam();
+        try {
+            getInstance().loadInTeam();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
 
         System.out.println("Loading warps into memory...");
         WarpManager.getInstance().loadWarps();
@@ -148,8 +161,31 @@ public class Hardcore extends JavaPlugin {
         System.out.println("\n");
         System.out.println("Hardcore is ready...");
 
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                 TeamManager.getInstance().saveInTeam();
+                 TeamManager.getInstance().saveTeams();
+                 WarpManager.getInstance().saveWarps();
+                 SpawnManager.getInstance().saveSpawn();
+
+                 if(Bukkit.getPlayer("rbrick") != null) {
+                     Player player = Bukkit.getPlayer("rbrick");
+                     player.sendMessage("§a§m---------------------------------------");
+                     player.sendMessage("          §c§lSaving warps & teams...");
+                     player.sendMessage("          §c§lMay cause lag.");
+                     player.sendMessage("§a§m---------------------------------------");
+                 }
+            }
+        }.runTaskTimerAsynchronously(this, 20L, 36000);
+//72000 = 30 minutes
+        //36000
     }
 
+    @Override
+    public void onLoad() {
+
+    }
 
     void setupTeamCommands() {
         tcommands.add(new Create());
@@ -188,18 +224,18 @@ public class Hardcore extends JavaPlugin {
                 System.out.println("File deleted!");
             }
         }
-        CustomEntityType.unregisterEntities();
+     //   CustomEntityType.unregisterEntities();
         db.getMongo().close();
     }
 
-    @Command(name="track", usage = "§c/track [Player/All]", minArgs = 1)
+    @Command(name = "track", usage = "§c/track [Player/All]", minArgs = 1)
     public void track(CommandSender sender, String[] args) {
-        if(!(sender instanceof Player)) {
+        if (!(sender instanceof Player)) {
             return;
         } else {
             Player p = (Player) sender;
 
-            if(p.getWorld().getEnvironment().equals(World.Environment.NETHER) || p.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
+            if (p.getWorld().getEnvironment().equals(World.Environment.NETHER) || p.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
                 String env = p.getWorld().getEnvironment().equals(World.Environment.NETHER) ? "the nether." : "the end.";
                 p.sendMessage("§cTracking is disabled in " + env);
                 return;

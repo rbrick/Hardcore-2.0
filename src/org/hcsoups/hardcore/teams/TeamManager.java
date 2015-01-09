@@ -403,8 +403,6 @@ public class TeamManager implements Listener {
         try {
             for (File file : teamsFiles) {
                 loadTeam(file);
-                System.gc();
-                file.delete();
             }
         } catch (Exception ex) {
             return;
@@ -427,10 +425,17 @@ public class TeamManager implements Listener {
             JSONArray array = (JSONArray) object.get("inTeam");
 
             for (Object obj : array) {
+
+
                 JSONObject jsonObject = (JSONObject) obj;
 
                 String name = (String) jsonObject.get("name");
+
                 Team team = matchTeam((String) jsonObject.get("team"));
+                if(!new File(Hardcore.getPlugin(Hardcore.class).getTeamsFolder(), (String) jsonObject.get("team") + ".json").exists()) {
+                    System.out.println("Team does not exist in a file, skipping...");
+                    continue;
+                }
                 inTeam.put(name, team);
             }
 

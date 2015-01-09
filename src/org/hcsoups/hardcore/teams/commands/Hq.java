@@ -20,6 +20,12 @@ public class Hq extends TeamSubCommand {
             p.sendMessage("§c/team hq");
             return;
         } else {
+
+            if(!TeamManager.getInstance().isOnTeam(p.getName())) {
+                p.sendMessage("§cYou are not on a team!");
+                return;
+            }
+
             TeamManager.getInstance().teamTeleport(p, "HQ", TeamManager.getInstance().getPlayerTeam(p).getHq());
         }
     }

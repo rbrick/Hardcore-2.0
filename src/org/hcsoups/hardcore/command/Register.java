@@ -149,7 +149,7 @@ public class Register {
             }
         }
 
-        if (executor.getPermission() !=  null) {
+        if (executor.getPermission() !=  null && !executor.getPermission().isEmpty()) {
             command.setPermission(executor.getPermission());
         }
 

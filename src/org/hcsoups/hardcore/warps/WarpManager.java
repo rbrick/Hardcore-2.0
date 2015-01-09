@@ -90,7 +90,7 @@ public class WarpManager implements Listener {
              } else {
                  StringBuilder builder = new StringBuilder();
 
-                 for (Warp warp : warps.get(player.getName())) {
+                 for (Warp warp : warps.get(playerS)) {
                      builder.append(warp.getName()).append(", ");
                  }
 
@@ -328,12 +328,33 @@ public class WarpManager implements Listener {
     public void savePlayer(String name) {
         List<Warp> warpsList = warps.get(name);
         if (warpsList.isEmpty()) {
+            File nfile = new File(Hardcore.getPlugin(Hardcore.class).getWarpsFolder(), name + ".json");
+
+            JSONArray warpsa = new JSONArray();
+
+            if (!nfile.exists()) {
+                try {
+                    nfile.createNewFile();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            try {
+                FileWriter writer = new FileWriter(nfile);
+                warpsa.writeJSONString(writer);
+                writer.flush();
+                writer.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
             return;
         }
 
         File nfile = new File(Hardcore.getPlugin(Hardcore.class).getWarpsFolder(), name + ".json");
 
-        if (nfile.exists()) {
+        if (!nfile.exists()) {
             try {
                 nfile.createNewFile();
             } catch (Exception ex) {
