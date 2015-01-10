@@ -25,6 +25,7 @@ import org.hcsoups.hardcore.teams.BaseTeamCommand;
 import org.hcsoups.hardcore.teams.TeamManager;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
 import org.hcsoups.hardcore.teams.commands.*;
+import org.hcsoups.hardcore.teams.listeners.CapListener;
 import org.hcsoups.hardcore.teams.listeners.ChatListener;
 import org.hcsoups.hardcore.teams.listeners.FriendlyFireListener;
 import org.hcsoups.hardcore.tracking.TrackingMethods;
@@ -97,6 +98,7 @@ public class Hardcore extends JavaPlugin {
         manager.registerEvents(new MobCapture(), this);
         manager.registerEvents(new XPBottles(), this);
         manager.registerEvents(new Salvage(), this);
+        manager.registerEvents(new CapListener(), this);
         // manager.registerEvents(new MobLimiter(), this);
         manager.registerEvents(WarpManager.getInstance(), this);
 

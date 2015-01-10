@@ -24,10 +24,11 @@ public  class Team {
 
     String password;
 
+    int valorPoints = 0;
+
     public Team(String name, List<String> managers, List<String> members) {
         this(name, managers, members, "");
     }
-
 
     // home, leader, manager, member
     public Team(String name,List<String> managers, List<String> members, String password) {

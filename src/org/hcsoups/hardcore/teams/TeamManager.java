@@ -337,6 +337,7 @@ public class TeamManager implements Listener {
 
         player.sendMessage("§7***§3" + team.getName() + "§7***");
         player.sendMessage("§7Password: " + (team.getPassword().isEmpty() || team.getPassword().equals("") ? "§cNot Set" : "§a" + team.getPassword()));
+        player.sendMessage("§7Valor Points: §b" + (team.getValorPoints()));
         player.sendMessage("§7Team HQ: " + (team.getHq() == null ? "§cNot Set" : "§aSet"));
         player.sendMessage("§7Team Rally: " + (team.getRally() == null ? "§cNot Set" : "§aSet"));
         player.sendMessage("§7Friendly Fire is " + (team.isFriendlyFire() ? "§con" : "§aoff"));
@@ -536,12 +537,17 @@ public class TeamManager implements Listener {
                 rally = null;
             }
 
+            int vp = 0;
+            if(object.get("valorpoints") != null) {
+               vp = Integer.valueOf(String.valueOf(object.get("valorpoints")));
+            }
+
 
             Team team = new Team(name, managers, memberss, password);
             team.setFriendlyFire(friendlyFire);
             team.setRally(rally);
             team.setHq(hq);
-
+            team.setValorPoints(vp);
 
             teams.add(team);
 
@@ -603,6 +609,8 @@ public class TeamManager implements Listener {
                 if (team.getRally() != null) {
                     object.put("rally", locToString(team.getRally(), ','));
                 }
+
+                object.put("valorpoints", team.getValorPoints());
 
                 FileWriter fw = new FileWriter(file);
                 object.writeJSONString(fw);
