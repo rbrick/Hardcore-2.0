@@ -60,12 +60,12 @@ public abstract class BaseCommand implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        return tabComplete(strings);
+        return tabComplete(strings, sender);
     }
 
     public abstract void execute(CommandSender sender, String[] args);
 
-    public List<String> tabComplete(String[] args) {
+    public List<String> tabComplete(String[] args, CommandSender sender) {
         return new ArrayList<String>();
     }
 

@@ -4,6 +4,8 @@ package org.hcsoups.hardcore.teams.commands;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.hcsoups.hardcore.Hardcore;
+import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
+import org.hcsoups.hardcore.scoreboard.ScoreboardTask;
 import org.hcsoups.hardcore.teams.Team;
 import org.hcsoups.hardcore.teams.TeamAction;
 import org.hcsoups.hardcore.teams.TeamManager;
@@ -42,6 +44,15 @@ public class Create extends TeamSubCommand {
                         TeamManager.getInstance().updateTeam(team, TeamAction.UPDATE);
                     }
                 }.runTaskAsynchronously(Hardcore.getPlugin(Hardcore.class));
+
+                ScoreboardTask.addTask(p.getName(), ScoreboardHandler.getBoards().get(p.getName()));
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        ScoreboardTask.removeTask(p.getName());
+                    }
+                }.runTaskLaterAsynchronously(Hardcore.getPlugin(Hardcore.class), 40L);
             }
 
 
@@ -60,6 +71,15 @@ public class Create extends TeamSubCommand {
                         TeamManager.getInstance().updateTeam(team, TeamAction.UPDATE);
                     }
                 }.runTaskAsynchronously(Hardcore.getPlugin(Hardcore.class));
+
+                ScoreboardTask.addTask(p.getName(), ScoreboardHandler.getBoards().get(p.getName()));
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        ScoreboardTask.removeTask(p.getName());
+                    }
+                }.runTaskLaterAsynchronously(Hardcore.getPlugin(Hardcore.class), 40L);
 
             }
 

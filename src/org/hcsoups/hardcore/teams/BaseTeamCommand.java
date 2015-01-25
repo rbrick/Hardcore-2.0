@@ -1,6 +1,7 @@
 package org.hcsoups.hardcore.teams;
 
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hcsoups.hardcore.Hardcore;
@@ -115,7 +116,7 @@ public class BaseTeamCommand extends BaseCommand {
     }
 
     @Override
-    public List<String> tabComplete(String[] args) {
+    public List<String> tabComplete(String[] args, CommandSender sender) {
         Collections.sort(list);
 
         if(args.length == 0) {
@@ -144,6 +145,29 @@ public class BaseTeamCommand extends BaseCommand {
                 Collections.sort(list2return);
                 return list2return;
             }
+
+            if(args[0].equalsIgnoreCase("i") || args[0].equalsIgnoreCase("info")) {
+                List<String> list2return = new ArrayList<String>();
+                for (String opt : toList(Bukkit.getOnlinePlayers())) {
+                    if (opt.toLowerCase().startsWith(args[1])) {
+                        list2return.add(opt);
+                    }
+                }
+                Collections.sort(list2return);
+                return list2return;
+            }
+
+            if(args[0].equalsIgnoreCase("r") || args[0].equalsIgnoreCase("roster")) {
+                List<String> list2return = new ArrayList<String>();
+                for (Team opt : TeamManager.getInstance().getTeams()) {
+                    if (opt.getName().toLowerCase().startsWith(args[1])) {
+                        list2return.add(opt.getName());
+                    }
+                }
+                Collections.sort(list2return);
+                return list2return;
+
+            }
         }
         return list;
     }
@@ -156,6 +180,14 @@ public class BaseTeamCommand extends BaseCommand {
       return subArgs;
     }
 
+
+    public List<String> toList(Player[] array) {
+         List<String> list = new ArrayList<String>();
+         for(Player t : array) {
+             list.add(t.getName());
+         }
+        return list;
+    }
 
 
 }

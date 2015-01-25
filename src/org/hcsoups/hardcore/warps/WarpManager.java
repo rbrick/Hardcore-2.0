@@ -382,7 +382,8 @@ public class WarpManager implements Listener {
         JSONParser parser = new JSONParser();
         String name = file.getName().split("\\.")[0];
         try {
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(file));
+            FileReader r = new FileReader(file);
+            JSONArray jsonArray = (JSONArray) parser.parse(r);
 
             List<Warp> warpList = new ArrayList<Warp>();
 
@@ -391,6 +392,7 @@ public class WarpManager implements Listener {
                    warpList.add(loadWarp(obj));
             }
             warps.put(name, warpList);
+            r.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

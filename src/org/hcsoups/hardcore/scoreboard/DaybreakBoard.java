@@ -6,77 +6,85 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-import org.hcsoups.hardcore.utils.TimeUtils;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by Ryan on 1/1/2015
+ * Created by Ryan on 1/11/2015
  * <p/>
  * Project: HCSoups
  */
 public class DaybreakBoard {
 
-    private Player player;
-    private Objective obj;
-    private Set<String> displayScores;
+    Player p;
+
+    Scoreboard scoreboard;
+
+    Objective obj;
+
+    HashMap<String, Integer> scores = new HashMap<>();
 
 
-    public DaybreakBoard(final Player player) {
-        super();
-        this.displayScores = new HashSet<String>();
-        this.player = player;
-        final Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-        (this.obj = board.registerNewObjective("Daybreak", "dummy")).setDisplayName("§6§lTimers");
-        this.obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        this.update();
-        player.setScoreboard(board);
+
+    public DaybreakBoard(Player p) {
+        this.p = p;
+        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        this.obj = scoreboard.registerNewObjective("daybreak", "dummy");
+        obj.setDisplayName("§7- §b§lAdvancedPvP §7-");
+        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
 
-    public void update() {
-        int nextVal = 14;
-        for (final ScoreboardGetter getter : ScoreboardGetter.SCORES) {
-            final int seconds = getter.getTime(this.player);
-            final String title = getter.getTitle(this.player);
-            if (seconds == -1) {
-                if (this.displayScores.contains(title)) {
-//                    if(title.contains("§a§lCombat Tag")) {
-//                       player.sendMessage("§aYou are no longer in combat!");
-//                    }
-
-                    this.obj.getScoreboard().resetScores(title);
-                    this.displayScores.remove(title);
-                }
-            } else {
-                this.displayScores.add(title);
-                this.obj.getScore(title).setScore(nextVal);
-                this.getTeam(title, seconds).addPlayer(Bukkit.getOfflinePlayer(title));
-            //    System.out.println(getter.getTitle(this.player) + " - " + getter.getTime(this.player));
-                --nextVal;
+    public void resetByScore(int score) {
+        if(!scores.containsValue(score)) {
+            throw new IllegalArgumentException("Score does not exists!");
+        } else {
+            for (Map.Entry<String, Integer> emap : scores.entrySet()) {
+                  if(emap.getValue() == score) {
+                      scoreboard.resetScores(emap.getKey());
+                  }
             }
         }
-        if (nextVal < 14) {
-            this.obj.getScore(ChatColor.RESET + " ").setScore(15);
-        }
-        else {
-            this.obj.getScoreboard().resetScores(ChatColor.RESET + " ");
-        }
     }
 
-    private Team getTeam(final String title, final int seconds) {
-        final String name = ChatColor.stripColor(title);
-        Team team = this.obj.getScoreboard().getTeam(name);
-        if (team == null) {
-            team = this.obj.getScoreboard().registerNewTeam(name);
-        }
-        final String time = TimeUtils.getMMSS(seconds);
-        team.setSuffix(ChatColor.GRAY + ": " + ChatColor.RED + time);
-        return team;
+//    public int previous() {
+//        int previous = max +1;
+//        return previous;
+//    }
+//
+//    public int next() {
+//        int next = max -1;
+//        return next;
+//    }
+
+    public void add(String name) {
+        scores.put(ChatColor.translateAlternateColorCodes('&', name), -1);
+
     }
 
+    public void update() {
+        int max = 15;
 
+         for(String score : scoreboard.getEntries()) {
+              scoreboard.resetScores(score);
+         }
+
+        String spacer = "";
+
+         for (ScoreGetter getter : ScoreGetter.SCORES) {
+             scoreboard.resetScores(getter.getName());
+             scoreboard.resetScores(getter.getValue(p));
+             obj.getScore(getter.getName()).setScore(max);
+             max -= 1;
+             obj.getScore(getter.getValue(p)).setScore(max);
+             max -= 1;
+             obj.getScore(spacer).setScore(max);
+             max -= 1;
+             spacer += " ";
+         }
+
+        p.setScoreboard(scoreboard);
+    }
 
 }

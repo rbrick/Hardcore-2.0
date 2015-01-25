@@ -2,6 +2,10 @@ package org.hcsoups.hardcore.teams.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.hcsoups.hardcore.Hardcore;
+import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
+import org.hcsoups.hardcore.scoreboard.ScoreboardTask;
 import org.hcsoups.hardcore.teams.TeamAction;
 import org.hcsoups.hardcore.teams.TeamManager;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
@@ -42,9 +46,19 @@ public class Kick extends TeamSubCommand {
                     TeamManager.getInstance().getTeamChat().remove(args[0]);
                     if (Bukkit.getPlayer(args[0]) != null) {
                         Bukkit.getPlayer(args[0]).sendMessage("§3You have been kicked from the team!");
+                        ScoreboardTask.addTask(Bukkit.getPlayer(args[0]).getName(), ScoreboardHandler.getBoards().get(Bukkit.getPlayer(args[0]).getName()));
+
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                ScoreboardTask.removeTask(Bukkit.getPlayer(args[0]).getName());
+                            }
+                        }.runTaskLaterAsynchronously(Hardcore.getPlugin(Hardcore.class), 40L);
                     }
 
                     TeamManager.getInstance().updateTeam(TeamManager.getInstance().getPlayerTeam(p), TeamAction.UPDATE);
+
+
 
 
 

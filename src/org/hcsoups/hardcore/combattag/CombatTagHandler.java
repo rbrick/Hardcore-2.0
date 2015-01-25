@@ -5,6 +5,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
+import org.hcsoups.hardcore.scoreboard.ScoreboardTask;
 import org.hcsoups.hardcore.spawn.SpawnManager;
 
 import java.util.HashMap;
@@ -18,11 +20,8 @@ public class CombatTagHandler implements Listener {
 
     public static HashMap<String, Long> inCombat = new HashMap<>();
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-           // Bukkit.broadcastMessage("Cancelled");
-        } else
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player damager = (Player) event.getDamager();
             Player damaged = (Player) event.getEntity();
@@ -38,6 +37,7 @@ public class CombatTagHandler implements Listener {
             } else {
                 inCombat.put(damaged.getName(), System.currentTimeMillis() + (60 * 1000));
                 damaged.sendMessage("§aYou are now in combat!");
+                ScoreboardTask.addTask(damaged.getName(), ScoreboardHandler.getBoards().get(damaged.getName()));
             }
             if (isTagged(damager)) {
                 inCombat.put(damager.getName(), System.currentTimeMillis() + (60 * 1000));
@@ -45,6 +45,7 @@ public class CombatTagHandler implements Listener {
             } else {
                 inCombat.put(damager.getName(), System.currentTimeMillis() + (60 * 1000));
                 damager.sendMessage("§aYou are now in combat!");
+                ScoreboardTask.addTask(damager.getName(), ScoreboardHandler.getBoards().get(damager.getName()));
             }
 
         }

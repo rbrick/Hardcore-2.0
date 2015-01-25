@@ -12,12 +12,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.hcsoups.hardcore.combattag.CombatTagHandler;
 import org.hcsoups.hardcore.command.Register;
-import org.hcsoups.hardcore.entities.CustomEntityType;
 import org.hcsoups.hardcore.listeners.DeathListener;
 import org.hcsoups.hardcore.listeners.JoinListener;
 import org.hcsoups.hardcore.mobcapture.MobCapture;
 import org.hcsoups.hardcore.salvaging.Salvage;
+import org.hcsoups.hardcore.scoreboard.DaybreakBoard;
 import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
+import org.hcsoups.hardcore.scoreboard.ScoreboardTask;
 import org.hcsoups.hardcore.spawn.SpawnCommand;
 import org.hcsoups.hardcore.spawn.SpawnManager;
 import org.hcsoups.hardcore.stats.StatManager;
@@ -67,13 +68,13 @@ public class Hardcore extends JavaPlugin {
     File warpsFolder = new File(getDataFolder() + File.separator + "warps" + File.separator);
     DB db;
 
-    ScoreboardHandler handler;
 
     static TeamManager tm;
 
 
     @Override
     public void onEnable() {
+        System.gc();
         super.onEnable();
         registrar = new BukkitRegistrar();
         register = new Register();
@@ -162,6 +163,8 @@ public class Hardcore extends JavaPlugin {
         System.out.println("\n");
         System.out.println("\n");
         System.out.println("Hardcore is ready...");
+
+        new ScoreboardTask().runTaskTimer(this, 20L, 20L);
 
         new BukkitRunnable() {
             @Override
@@ -259,6 +262,25 @@ public class Hardcore extends JavaPlugin {
         }
     }
 
+    @Command(name = "sbtoggle", usage = "§c/sbtoggle")
+    public void toggleBoard(CommandSender sender, String[] args) {
+        if(sender instanceof Player) {
+            Player p = (Player) sender;
+            if(ScoreboardHandler.isHidden(p)) {
+                DaybreakBoard board = new DaybreakBoard(p);
+                board.update();
+                ScoreboardHandler.addBoard(p, board);
+                ScoreboardHandler.show(p);
+                p.sendMessage("§eScoreboard: §aVisible");
+            } else {
+                ScoreboardHandler.hide(p);
+                p.sendMessage("§eScoreboard: §cHidden");
+            }
+        }
+    }
+
+
+
     public List<TeamSubCommand> getTcommands() {
         return tcommands;
     }
@@ -280,7 +302,4 @@ public class Hardcore extends JavaPlugin {
         return tm;
     }
 
-    public ScoreboardHandler getHandler() {
-        return handler;
-    }
 }

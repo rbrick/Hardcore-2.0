@@ -3,6 +3,8 @@ package org.hcsoups.hardcore.teams.commands;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.hcsoups.hardcore.Hardcore;
+import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
+import org.hcsoups.hardcore.scoreboard.ScoreboardTask;
 import org.hcsoups.hardcore.teams.TeamManager;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
 
@@ -30,6 +32,15 @@ public class Leave extends TeamSubCommand {
 
                 }
             }.runTaskAsynchronously(Hardcore.getPlugin(Hardcore.class));
+
+             ScoreboardTask.addTask(p.getName(), ScoreboardHandler.getBoards().get(p.getName()));
+
+             new BukkitRunnable() {
+                 @Override
+                 public void run() {
+                     ScoreboardTask.removeTask(p.getName());
+                 }
+             }.runTaskLaterAsynchronously(Hardcore.getPlugin(Hardcore.class), 40L);
 
          }
     }

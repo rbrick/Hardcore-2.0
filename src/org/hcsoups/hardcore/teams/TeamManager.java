@@ -109,6 +109,11 @@ public class TeamManager implements Listener {
     public boolean joinTeam(String name, String password, Player player) {
         Team team = matchTeam(name);
 
+        if(isOnTeam(player.getName())) {
+            player.sendMessage("§cYou are already on a team!");
+            return false;
+        }
+
         if (team == null) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('§',"§cCould not find team '" + name + "'."));
             return false;
@@ -1017,5 +1022,7 @@ public class TeamManager implements Listener {
         return dontMove;
     }
 
-
+    public ArrayList<Team> getTeams() {
+        return teams;
+    }
 }

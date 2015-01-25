@@ -4,10 +4,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.hcsoups.hardcore.Hardcore;
 import org.hcsoups.hardcore.combattag.CombatTagHandler;
+import org.hcsoups.hardcore.scoreboard.DaybreakBoard;
 import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
 import org.hcsoups.hardcore.stats.StatManager;
+import org.hcsoups.hardcore.teams.TeamManager;
 
 /**
  * Created by Ryan on 12/30/2014
@@ -23,9 +24,12 @@ public class JoinListener implements Listener {
 
        // Hardcore.getPlugin(Hardcore.class).getHandler().add(event.getPlayer());
 
+        DaybreakBoard board = new DaybreakBoard(event.getPlayer());
+        board.update();
+        ScoreboardHandler.addBoard(event.getPlayer(), board);
+
+
         event.setJoinMessage(null);
-
-
     }
 
     @EventHandler
