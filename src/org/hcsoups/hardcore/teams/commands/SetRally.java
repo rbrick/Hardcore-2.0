@@ -2,6 +2,7 @@ package org.hcsoups.hardcore.teams.commands;
 
 import org.bukkit.entity.Player;
 import org.hcsoups.hardcore.teams.TeamManager;
+import org.hcsoups.hardcore.teams.TeamManagerUUID;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
 
 import java.util.Arrays;
@@ -21,10 +22,10 @@ public class SetRally extends TeamSubCommand {
         if(TeamManager.getInstance().getPlayerTeam(p) == null) {
             p.sendMessage("§cYou are not on a team!");
         } else {
-            if( TeamManager.getInstance().isManager(p)) {
-                TeamManager.getInstance().getPlayerTeam(p).setRally(p.getLocation());
+            if( TeamManagerUUID.getInstance().isManager(p)) {
+                TeamManagerUUID.getInstance().getPlayerTeam(p).setRally(p.getLocation());
                // TeamManager.getInstance().saveTeam(TeamManager.getInstance().getPlayerTeam(p));
-                TeamManager.getInstance().messageTeam(TeamManager.getInstance().getPlayerTeam(p), "§3" + p.getName() + " has updated the teams rally!");
+                TeamManagerUUID.getInstance().messageTeam(TeamManagerUUID.getInstance().getPlayerTeam(p), "§3" + p.getName() + " has updated the teams rally!");
             } else {
                 p.sendMessage("§cYou must be at least a manager to perform this command.");
             }

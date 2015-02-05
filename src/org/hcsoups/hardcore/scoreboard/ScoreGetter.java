@@ -3,6 +3,7 @@ package org.hcsoups.hardcore.scoreboard;
 import org.bukkit.entity.Player;
 import org.hcsoups.hardcore.combattag.CombatTagHandler;
 import org.hcsoups.hardcore.teams.TeamManager;
+import org.hcsoups.hardcore.teams.TeamManagerUUID;
 import org.hcsoups.hardcore.utils.TimeUtils;
 
 /**
@@ -20,8 +21,8 @@ public interface ScoreGetter {
 
         @Override
         public String getValue(Player player) {
-            if(TeamManager.getInstance().isOnTeam(player.getName())) {
-                return TeamManager.getInstance().getPlayerTeam(player).getName();
+            if(TeamManagerUUID.getInstance().isOnTeam(player.getUniqueId())) {
+                return TeamManagerUUID.getInstance().getPlayerTeam(player).getName();
             } else {
                 return "None";
             }
@@ -36,10 +37,10 @@ public interface ScoreGetter {
 
         @Override
         public String getValue(Player player) {
-            if(!TeamManager.getInstance().isOnTeam(player.getName())) {
+            if(!TeamManagerUUID.getInstance().isOnTeam(player.getUniqueId())) {
                 return 0 + "";
             }
-            return TeamManager.getInstance().getPlayerTeam(player).getValorPoints() + ""; // Kills
+            return TeamManagerUUID.getInstance().getPlayerTeam(player).getValorPoints() + ""; // Kills
         }
     };
 

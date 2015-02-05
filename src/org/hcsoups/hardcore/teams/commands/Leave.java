@@ -6,6 +6,7 @@ import org.hcsoups.hardcore.Hardcore;
 import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
 import org.hcsoups.hardcore.scoreboard.ScoreboardTask;
 import org.hcsoups.hardcore.teams.TeamManager;
+import org.hcsoups.hardcore.teams.TeamManagerUUID;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
 
 import java.util.Arrays;
@@ -28,7 +29,7 @@ public class Leave extends TeamSubCommand {
          } else {
             new BukkitRunnable() {
                 public void run() {
-                    TeamManager.getInstance().leaveTeam(p);
+                    TeamManagerUUID.getInstance().leaveTeam(p);
 
                 }
             }.runTaskAsynchronously(Hardcore.getPlugin(Hardcore.class));

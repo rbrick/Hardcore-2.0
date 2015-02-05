@@ -23,16 +23,16 @@ public class WarpAdminCommand extends BaseCommand {
         if (sender instanceof Player) {
             if (args.length == 1) {
                 String name = args[0];
-                WarpManager.getInstance().listWarpsAdmin(((Player) sender), name);
+                WarpManagerUUID.getInstance().listWarpsAdmin(((Player) sender), name);
             }
             if (args.length == 2) {
                 String name = args[0];
-                Warp warp = WarpManager.getInstance().matchWarp(name, args[1]);
+                Warp warp = WarpManagerUUID.getInstance().matchWarp(name, args[1]);
 
                 if (warp == null) {
                     sender.sendMessage("§cWarp '" + args[1] + "' does not exist for player '" + name + "'");
                 } else {
-                    WarpManager.getInstance().warpAdmin(((Player) sender), name, warp);
+                    WarpManagerUUID.getInstance().warpAdmin(((Player) sender), name, warp);
                 }
             }
 

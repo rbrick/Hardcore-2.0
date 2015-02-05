@@ -1,10 +1,13 @@
 package org.hcsoups.hardcore.warps;
 
+import com.mongodb.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import mkremins.fanciful.FancyMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -16,45 +19,42 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.hcsoups.hardcore.Hardcore;
 import org.hcsoups.hardcore.teams.TeamManager;
 import org.hcsoups.hardcore.zeus.annotations.Command;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Ryan on 11/22/2014
  * <p/>
  * Project: HCSoups
  */
-public class WarpManager implements Listener {
+public class WarpManagerUUID implements Listener {
 
-    private HashMap<String, List<Warp>> warps = new HashMap<String, List<Warp>>();
+    private HashMap<UUID, List<Warp>> warps = new HashMap<UUID, List<Warp>>();
 
     private HashMap<String, BukkitRunnable> overriding = new HashMap<String, BukkitRunnable>();
 
     private List<String> cantAttack = new ArrayList<>();
 
-    static WarpManager instance = new WarpManager();
+    static WarpManagerUUID instance = new WarpManagerUUID();
+
+    private DBCollection warpc = Hardcore.getPlugin(Hardcore.class).getMongo().getCollection("warps");
 
 
     public void listWarps(Player player) {
-        if(!warps.containsKey(player.getName()) || warps.containsKey(player.getName()) && warps.get(player.getName()).isEmpty()) {
+        if(!warps.containsKey(player.getUniqueId()) || warps.containsKey(player.getUniqueId()) && warps.get(player.getUniqueId()).isEmpty()) {
             player.sendMessage("§7***Warp List(0/" + warpSize(player) + ")***\n[]");
             return;
         }
-        player.sendMessage("§7***Warp List(" + warps.get(player.getName()).size() + "/" + warpSize(player) + ")***");
+        player.sendMessage("§7***Warp List(" + warps.get(player.getUniqueId()).size() + "/" + warpSize(player) + ")***");
 
         StringBuilder builder = new StringBuilder();
 
         FancyMessage message = new FancyMessage("[").color(ChatColor.GRAY).then();
 
-        List<Warp> pwarps = warps.get(player.getName());
+        List<Warp> pwarps = warps.get(player.getUniqueId());
 
 
         for (int i = 0; i < pwarps.size(); i++) {
@@ -84,7 +84,7 @@ public class WarpManager implements Listener {
          if (matchPlayer(name) == null) {
              player.sendMessage("§cCould not find player '" + name + "'.");
          } else {
-             String playerS = matchPlayer(name);
+             UUID playerS = matchPlayer(name);
              if(!warps.containsKey(playerS) || warps.containsKey(playerS) && warps.get(playerS).isEmpty()) {
                  player.sendMessage(String.format("§7Showing warps for %s: \n[]", playerS));
              } else {
@@ -126,37 +126,37 @@ public class WarpManager implements Listener {
 
             overriding.get(player.getName()).runTaskLater(Hardcore.getPlugin(Hardcore.class), 200L);
         } else {
-            if (warps.get(player.getName()) != null && warps.get(player.getName()).size() >= warpSize(player)) {
+            if (warps.get(player.getUniqueId()) != null && warps.get(player.getUniqueId()).size() >= warpSize(player)) {
                 player.sendMessage("§cYou have set the max amount of warps!");
                 return;
             }
-            List<Warp> pwarps = warps.get(player.getName());
+            List<Warp> pwarps = warps.get(player.getUniqueId());
 
             if(pwarps == null) {
                 pwarps = new ArrayList<Warp>();
             }
             Warp warp = new Warp(name, player.getLocation());
             pwarps.add(warp);
-            warps.put(player.getName(), pwarps);
+            warps.put(player.getUniqueId(), pwarps);
             player.sendMessage(String.format("§7Warp '%s' has been set!", warp.getName()));
         }
     }
 
     public void delWarp(Player player, String name) {
-          if (matchWarp(player.getName(), name) == null || !warps.containsKey(player.getName()) || warps.containsKey(player.getName()) && warps.get(player.getName()).isEmpty()) {
+          if (matchWarp(player.getName(), name) == null || !warps.containsKey(player.getUniqueId()) || warps.containsKey(player.getUniqueId()) && warps.get(player.getUniqueId()).isEmpty()) {
               player.sendMessage(String.format("§cWarp '%s' does not exist!", name));
           } else {
-            List<Warp> warpsp = warps.get(player.getName());
+            List<Warp> warpsp = warps.get(player.getUniqueId());
             Warp warp2rem = matchWarp(player.getName(), name);
             warpsp.remove(warp2rem);
-            warps.put(player.getName(), warpsp);
+            warps.put(player.getUniqueId(), warpsp);
             player.sendMessage(String.format("§7Warp '%s' has been deleted.", warp2rem.getName()));
           }
     }
 
 
     public void warp(final Player player, String warp) {
-        if (matchWarp(player.getName(), warp) == null || !warps.containsKey(player.getName()) || warps.containsKey(player.getName()) && warps.get(player.getName()).isEmpty()) {
+        if (matchWarp(player.getName(), warp) == null || !warps.containsKey(player.getUniqueId()) || warps.containsKey(player.getUniqueId()) && warps.get(player.getUniqueId()).isEmpty()) {
             player.sendMessage(String.format("§cWarp '%s' does not exist!", warp));
             return;
         }
@@ -247,21 +247,21 @@ public class WarpManager implements Listener {
         return warpCount;
     }
 
-    private WarpManager() {
+    private WarpManagerUUID() {
     }
 
-    public static WarpManager getInstance() {
+    public static WarpManagerUUID getInstance() {
         return instance;
     }
 
 
     public Warp matchWarp(String player, String name) {
-        player = matchPlayer(player);
+        UUID id = matchPlayer(player);
 
-        if (player == null) {
+        if (id == null) {
             return null;
         }
-        for(Warp warp : warps.get(player)) {
+        for(Warp warp : warps.get(id)) {
             if (name.equalsIgnoreCase(warp.getName())) {
                 return warp;
             }
@@ -269,11 +269,12 @@ public class WarpManager implements Listener {
      return null;
     }
 
-    public String matchPlayer(String name) {
-       String player = null;
-        for (String players : warps.keySet()) {
-            if (players.equalsIgnoreCase(name)) {
-                player = players;
+    public UUID matchPlayer(String name) {
+       UUID player = null;
+        for (UUID id : warps.keySet()) {
+            OfflinePlayer p = Bukkit.getOfflinePlayer(id);
+            if(p != null && p.getName().equalsIgnoreCase(name)) {
+                   player = p.getUniqueId();
             }
         }
         return player;
@@ -284,7 +285,7 @@ public class WarpManager implements Listener {
        if (overriding.containsKey(sender.getName())) {
            TempWarp warp = (TempWarp) ((Player) sender).getMetadata("warpToOverride").get(0).value();
            warp.getWarp().setLocation(warp.getLoc());
-           warps.get(sender.getName()).set(warps.get(sender.getName()).indexOf(warp.getWarp()), warp.getWarp());
+           warps.get(((Player) sender).getUniqueId()).set(warps.get(((Player) sender).getUniqueId()).indexOf(warp.getWarp()), warp.getWarp());
            overriding.get(sender.getName()).cancel();
            overriding.remove(sender.getName());
 
@@ -311,101 +312,91 @@ public class WarpManager implements Listener {
         }
     }
 
-    public JSONObject serializeWarp(Warp warp) {
-        JSONObject warpobject = new JSONObject();
-        warpobject.put("name", warp.getName());
-        warpobject.put("location", TeamManager.getInstance().locToString(warp.getLocation(), ','));
-        return warpobject;
+    public BasicDBObject serializeWarp(Warp warp) {
+        BasicDBObject obj = new BasicDBObject();
+        obj.put("name", warp.getName());
+        obj.put("location", TeamManager.getInstance().locToString(warp.getLocation(), ','));
+        return obj;
     }
 
-    public Warp loadWarp(JSONObject object) {
-        String name = (String) object.get("name");
-        Location location = TeamManager.getInstance().locFromString((String) object.get("location"), ',');
+    public Warp loadWarp(BasicDBObject object) {
+        String name = (String) object.getString("name");
+        Location location = TeamManager.getInstance().locFromString(object.getString("location"), ',');
         return new Warp(name, location);
     }
 
 
-    public void savePlayer(String name) {
-        List<Warp> warpsList = warps.get(name);
+    public void savePlayer(UUID id) {
+        List<Warp> warpsList = warps.get(id);
         if (warpsList.isEmpty()) {
-            File nfile = new File(Hardcore.getPlugin(Hardcore.class).getWarpsFolder(), name + ".json");
+            DBCursor cursor = warpc.find(new BasicDBObject("uuid", id.toString()));
 
-            JSONArray warpsa = new JSONArray();
+            if(cursor.hasNext()) {
+                BasicDBList li = new BasicDBList();
 
-            if (!nfile.exists()) {
-                try {
-                    nfile.createNewFile();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                BasicDBObject obj = new BasicDBObject()
+                        .append("uuid", id.toString())
+                        .append("warps", li);
+
+                warpc.update(cursor.getQuery(), obj);
+
+            } else {
+                BasicDBObject obj = new BasicDBObject()
+                        .append("uuid", id.toString())
+                        .append("warps", new BasicDBList());
+                warpc.insert(obj, WriteConcern.NORMAL);
+            }
+        } else {
+            BasicDBList list = new BasicDBList();
+
+            for(Warp w : warpsList) {
+                list.add(serializeWarp(w));
+            }
+            DBCursor cursor = warpc.find(new BasicDBObject("uuid", id.toString()));
+            if(cursor.hasNext()) {
+                BasicDBObject obj = new BasicDBObject()
+                        .append("uuid", id.toString())
+                        .append("warps", list);
+                warpc.update(cursor.getQuery(), obj);
+            } else {
+                BasicDBObject obj = new BasicDBObject()
+                        .append("uuid", id.toString())
+                        .append("warps", list);
+                warpc.insert(obj, WriteConcern.NORMAL);
             }
 
-            try {
-                FileWriter writer = new FileWriter(nfile);
-                warpsa.writeJSONString(writer);
-                writer.flush();
-                writer.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-            return;
         }
 
-        File nfile = new File(Hardcore.getPlugin(Hardcore.class).getWarpsFolder(), name + ".json");
-
-        if (!nfile.exists()) {
-            try {
-                nfile.createNewFile();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        JSONArray warpsa = new JSONArray();
-
-        for (Warp warp : warpsList) {
-            warpsa.add(serializeWarp(warp));
-        }
-
-       try {
-           FileWriter writer = new FileWriter(nfile);
-           warpsa.writeJSONString(writer);
-           writer.flush();
-           writer.close();
-       } catch (Exception ex) {
-           ex.printStackTrace();
-       }
     }
 
-    public void loadPlayer(File file) {
-        JSONParser parser = new JSONParser();
-        String name = file.getName().split("\\.")[0];
-        try {
-            FileReader r = new FileReader(file);
-            JSONArray jsonArray = (JSONArray) parser.parse(r);
+    public void loadPlayer(BasicDBObject obj) {
+        UUID id = UUID.fromString(obj.getString("uuid"));
 
-            List<Warp> warpList = new ArrayList<Warp>();
+        List<Warp> wlist = new ArrayList<>();
 
-            for (Object object : jsonArray) {
-                   JSONObject obj = (JSONObject) object;
-                   warpList.add(loadWarp(obj));
+        BasicDBList list = (BasicDBList) obj.get("warps");
+
+        if(list.isEmpty()) {
+            warps.put(id, wlist);
+        } else {
+            for (Object ob : list) {
+                BasicDBObject objs = (BasicDBObject)ob;
+                Warp w = loadWarp(objs);
+                wlist.add(w);
             }
-            warps.put(name, warpList);
-            r.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            warps.put(id, wlist);
         }
     }
     public void saveWarps() {
-        for (String name : warps.keySet()) {
+        for (UUID name : warps.keySet()) {
             savePlayer(name);
         }
     }
     public void loadWarps() {
-        File[] warpFiles = Hardcore.getPlugin(Hardcore.class).getWarpsFolder().listFiles();
-        for (File warp : warpFiles) {
-            loadPlayer(warp);
+        DBCursor cursor = warpc.find();
+        while (cursor.hasNext()) {
+            BasicDBObject obj = (BasicDBObject) cursor.next();
+            loadPlayer(obj);
         }
     }
 
@@ -426,7 +417,12 @@ public class WarpManager implements Listener {
         }
     }
 
-    public HashMap<String, List<Warp>> getWarps() {
+
+    public void setWarps(HashMap<UUID, List<Warp>> warps) {
+        this.warps = warps;
+    }
+
+    public HashMap<UUID, List<Warp>> getWarps() {
         return warps;
     }
 }

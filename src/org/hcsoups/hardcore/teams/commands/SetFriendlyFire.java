@@ -1,9 +1,7 @@
 package org.hcsoups.hardcore.teams.commands;
 
 import org.bukkit.entity.Player;
-import org.hcsoups.hardcore.teams.Team;
-import org.hcsoups.hardcore.teams.TeamManager;
-import org.hcsoups.hardcore.teams.TeamSubCommand;
+import org.hcsoups.hardcore.teams.*;
 
 import java.util.Arrays;
 
@@ -22,14 +20,14 @@ public class SetFriendlyFire extends TeamSubCommand {
             p.sendMessage("§c/team ff <on/off>");
             return;
         }
-        if(!TeamManager.getInstance().isOnTeam(p.getName())) {
+        if(!TeamManagerUUID.getInstance().isOnTeam(p.getUniqueId())) {
             p.sendMessage("§cYou are not on a team.");
             return;
-        } else if(!TeamManager.getInstance().isManager(p)) {
+        } else if(!TeamManagerUUID.getInstance().isManager(p)) {
                p.sendMessage("§cYou must be at least a manager to perform this command.");
             return;
         } else {
-            Team team = TeamManager.getInstance().getPlayerTeam(p);
+            TeamUUID team = TeamManagerUUID.getInstance().getPlayerTeam(p);
 
             if(args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("true")) {
                  if(team.isFriendlyFire()) {
@@ -37,10 +35,10 @@ public class SetFriendlyFire extends TeamSubCommand {
                      return;
                  }
                  team.setFriendlyFire(true);
-                 TeamManager.getInstance().messageTeam(team, "§3" + p.getName() + " has enabled friendly fire!");
+                TeamManagerUUID.getInstance().messageTeam(team, "§3" + p.getName() + " has enabled friendly fire!");
             } else if(args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("false")) {
                 team.setFriendlyFire(false);
-                TeamManager.getInstance().messageTeam(team, "§3" + p.getName() + " has disabled friendly fire!");
+                TeamManagerUUID.getInstance().messageTeam(team, "§3" + p.getName() + " has disabled friendly fire!");
             } else {
                 p.sendMessage("§c/team ff <on/off>");
                 return;

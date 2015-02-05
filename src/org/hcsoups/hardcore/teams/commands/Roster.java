@@ -1,9 +1,7 @@
 package org.hcsoups.hardcore.teams.commands;
 
 import org.bukkit.entity.Player;
-import org.hcsoups.hardcore.teams.Team;
-import org.hcsoups.hardcore.teams.TeamManager;
-import org.hcsoups.hardcore.teams.TeamSubCommand;
+import org.hcsoups.hardcore.teams.*;
 
 import java.util.Arrays;
 
@@ -24,12 +22,12 @@ public class Roster extends TeamSubCommand {
             return;
         }
 
-        Team team = TeamManager.getInstance().matchTeam(args[0]);
+        TeamUUID team = TeamManagerUUID.getInstance().matchTeam(args[0]);
 
         if(team == null) {
          p.sendMessage("§cTeam '" + args[0] + "' does not exist!");
          return;
         }
-        TeamManager.getInstance().sendInfo(p, team);
+        TeamManagerUUID.getInstance().sendInfo(p, team);
     }
 }

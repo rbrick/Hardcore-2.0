@@ -27,7 +27,7 @@ public class WarpCommand extends BaseCommand {
         if(!(sender instanceof Player)) return;
         if (args.length == 1) {
             if(args[0].equalsIgnoreCase("list")) {
-                WarpManager.getInstance().listWarps(((Player) sender));
+                WarpManagerUUID.getInstance().listWarps(((Player) sender));
                 return;
             } else {
                 if (args[0].equalsIgnoreCase("set")) {
@@ -41,7 +41,7 @@ public class WarpCommand extends BaseCommand {
                         return;
                     }
 
-                    WarpManager.getInstance().warp(((Player) sender), args[0]);
+                    WarpManagerUUID.getInstance().warp(((Player) sender), args[0]);
                 }
             }
         } else if (args.length == 2) {
@@ -50,10 +50,10 @@ public class WarpCommand extends BaseCommand {
                     sender.sendMessage("§cYou may not set warps within spawn.");
                     return;
                 }
-                WarpManager.getInstance().setWarp(((Player) sender), args[1]);
+                WarpManagerUUID.getInstance().setWarp(((Player) sender), args[1]);
                 return;
             } else if (args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("delete")) {
-                WarpManager.getInstance().delWarp(((Player) sender), args[1]);
+                WarpManagerUUID.getInstance().delWarp(((Player) sender), args[1]);
             } else {
                 sender.sendMessage("§cInvalid /warp usage. Try:\n" +
                         "§7/warp <name> - Teleport to a warp, if it exists.\n" +

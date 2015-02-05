@@ -111,7 +111,7 @@ public class DeathListener implements Listener {
             stat1.setKills(stat1.getKills() + 1);
             stat1.setKdr();
             StatManager.getInstance().updateStats(event.getEntity().getKiller().getName(), stat1);
-            logFight(event.getEntity(), event.getEntity().getKiller());
+//            logFight(event.getEntity(), event.getEntity().getKiller());
 
 
             final Hologram holo = HologramsAPI.createHologram(Hardcore.getPlugin(Hardcore.class), event.getEntity().getEyeLocation());
@@ -155,6 +155,7 @@ public class DeathListener implements Listener {
     }
 
 
+    // no longer used
     public void logFight(Player player, Player player1) {
         BasicDBObject object = new BasicDBObject();
 

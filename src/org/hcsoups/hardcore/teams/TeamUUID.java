@@ -4,18 +4,18 @@ import lombok.Data;
 import org.bukkit.Location;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * This code is copyrighted by rbrick and the BreakMC Network.
  */
-@Deprecated
 @Data
-public  class Team {
+public class TeamUUID {
     String name;
 
-    List<String> managers;
+    List<UUID> managers;
 
-    List<String> members;
+    List<UUID> members;
 
     Location hq;
 
@@ -27,12 +27,12 @@ public  class Team {
 
     int valorPoints = 0;
 
-    public Team(String name, List<String> managers, List<String> members) {
+    public TeamUUID(String name, List<UUID> managers, List<UUID> members) {
         this(name, managers, members, "");
     }
 
     // home, leader, manager, member
-    public Team(String name,List<String> managers, List<String> members, String password) {
+    public TeamUUID(String name, List<UUID> managers, List<UUID> members, String password) {
         this.name = name;
         this.managers = managers;
         this.members = members;

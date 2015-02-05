@@ -7,6 +7,7 @@ import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
 import org.hcsoups.hardcore.scoreboard.ScoreboardTask;
 import org.hcsoups.hardcore.teams.TeamAction;
 import org.hcsoups.hardcore.teams.TeamManager;
+import org.hcsoups.hardcore.teams.TeamManagerUUID;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
 
 import java.util.Arrays;
@@ -28,11 +29,8 @@ public class Join extends TeamSubCommand {
             return;
         } else {
             if (args.length == 1) {
-                boolean success = TeamManager.getInstance().joinTeam(args[0], "", p);
+                boolean success = TeamManagerUUID.getInstance().joinTeam(args[0], "", p);
                 if (success) {
-                    TeamManager.getInstance().updatePlayer(p, TeamManager.getInstance().getPlayerTeam(p));
-                    TeamManager.getInstance().updateTeam(TeamManager.getInstance().getPlayerTeam(p), TeamAction.UPDATE);
-                    p.remove();
                     ScoreboardTask.addTask(p.getName(), ScoreboardHandler.getBoards().get(p.getName()));
 
                     new BukkitRunnable() {
@@ -45,12 +43,10 @@ public class Join extends TeamSubCommand {
                 return;
             }
             if (args.length == 2) {
-                boolean success = TeamManager.getInstance().joinTeam(args[0], args[1], p);
+                boolean success = TeamManagerUUID.getInstance().joinTeam(args[0], args[1], p);
                 if (success) {
-                    TeamManager.getInstance().updatePlayer(p, TeamManager.getInstance().getPlayerTeam(p));
-                    TeamManager.getInstance().updateTeam(TeamManager.getInstance().getPlayerTeam(p), TeamAction.UPDATE);
 
-                   ScoreboardTask.addTask(p.getName(), ScoreboardHandler.getBoards().get(p.getName()));
+                    ScoreboardTask.addTask(p.getName(), ScoreboardHandler.getBoards().get(p.getName()));
 
                     new BukkitRunnable() {
                         @Override

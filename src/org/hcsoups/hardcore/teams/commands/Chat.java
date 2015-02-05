@@ -3,6 +3,7 @@ package org.hcsoups.hardcore.teams.commands;
 
 import org.bukkit.entity.Player;
 import org.hcsoups.hardcore.teams.TeamManager;
+import org.hcsoups.hardcore.teams.TeamManagerUUID;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
 
 import java.util.Arrays;
@@ -18,13 +19,13 @@ public class Chat extends TeamSubCommand {
 
     @Override
     public void execute(Player p, String[] args) {
-        if(TeamManager.getInstance().isOnTeam(p.getName())) {
+        if(TeamManagerUUID.getInstance().isOnTeam(p.getUniqueId())) {
            if(TeamManager.getInstance().getTeamChat().contains(p.getName())) {
                p.sendMessage("§3Now talking in public chat.");
-               TeamManager.getInstance().getTeamChat().remove(p.getName());
+               TeamManagerUUID.getInstance().getTeamChat().remove(p.getUniqueId());
            } else  {
                p.sendMessage("§3Now talking in team chat.");
-               TeamManager.getInstance().getTeamChat().add(p.getName());
+               TeamManagerUUID.getInstance().getTeamChat().add(p.getUniqueId());
            }
         } else {
             p.sendMessage("§cYou are not on a team!");

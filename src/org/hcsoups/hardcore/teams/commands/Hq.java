@@ -2,6 +2,7 @@ package org.hcsoups.hardcore.teams.commands;
 
 import org.bukkit.entity.Player;
 import org.hcsoups.hardcore.teams.TeamManager;
+import org.hcsoups.hardcore.teams.TeamManagerUUID;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
 
 /**
@@ -21,12 +22,12 @@ public class Hq extends TeamSubCommand {
             return;
         } else {
 
-            if(!TeamManager.getInstance().isOnTeam(p.getName())) {
+            if(!TeamManagerUUID.getInstance().isOnTeam(p.getUniqueId())) {
                 p.sendMessage("§cYou are not on a team!");
                 return;
             }
 
-            TeamManager.getInstance().teamTeleport(p, "HQ", TeamManager.getInstance().getPlayerTeam(p).getHq());
+            TeamManagerUUID.getInstance().teamTeleport(p, "HQ", TeamManagerUUID.getInstance().getPlayerTeam(p).getHq());
         }
     }
 }

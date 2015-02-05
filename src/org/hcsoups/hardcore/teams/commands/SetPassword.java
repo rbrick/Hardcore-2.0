@@ -1,9 +1,7 @@
 package org.hcsoups.hardcore.teams.commands;
 
 import org.bukkit.entity.Player;
-import org.hcsoups.hardcore.teams.Team;
-import org.hcsoups.hardcore.teams.TeamManager;
-import org.hcsoups.hardcore.teams.TeamSubCommand;
+import org.hcsoups.hardcore.teams.*;
 
 import java.util.Arrays;
 
@@ -22,24 +20,24 @@ public class SetPassword extends TeamSubCommand {
           p.sendMessage("§c/team pass <Password>");
           return;
       }
-      if(!TeamManager.getInstance().isOnTeam(p.getName())) {
+      if(!TeamManagerUUID.getInstance().isOnTeam(p.getUniqueId())) {
           p.sendMessage("§cYou are not on a team!");
           return;
-      } else if(!TeamManager.getInstance().isManager(p)) {
+      } else if(!TeamManagerUUID.getInstance().isManager(p)) {
           p.sendMessage("§cYou must be at least a manager to perform this command!");
           return;
       } else {
-          Team team = TeamManager.getInstance().getPlayerTeam(p);
+          TeamUUID team = TeamManagerUUID.getInstance().getPlayerTeam(p);
           if(args[0].equalsIgnoreCase("none") || args[0].equalsIgnoreCase("null") || args[0].equalsIgnoreCase("nil")) {
               team.setPassword("");
-              TeamManager.getInstance().messageTeam(team, "§7" + p.getName() + " has turned off password protection!");
-              TeamManager.getInstance().saveTeam(team);
+              TeamManagerUUID.getInstance().messageTeam(team, "§7" + p.getName() + " has turned off password protection!");
+              TeamManagerUUID.getInstance().saveTeam(team);
               return;
           }
           String old_pass = team.getPassword();
           team.setPassword(args[0]);
-          TeamManager.getInstance().messageTeam(team, "§7" + p.getName() + " has set the team password to '" + team.getPassword() + "'.");
-          TeamManager.getInstance().saveTeam(team);
+          TeamManagerUUID.getInstance().messageTeam(team, "§7" + p.getName() + " has set the team password to '" + team.getPassword() + "'.");
+    //      TeamManagerUUID.getInstance().saveTeam(team);
           return;
       }
 

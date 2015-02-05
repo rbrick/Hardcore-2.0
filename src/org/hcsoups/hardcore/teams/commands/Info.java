@@ -2,6 +2,7 @@ package org.hcsoups.hardcore.teams.commands;
 
 import org.bukkit.entity.Player;
 import org.hcsoups.hardcore.teams.TeamManager;
+import org.hcsoups.hardcore.teams.TeamManagerUUID;
 import org.hcsoups.hardcore.teams.TeamSubCommand;
 
 import java.util.Arrays;
@@ -22,15 +23,11 @@ public class Info extends TeamSubCommand {
         }
 
        if(args.length == 0) {
-           TeamManager.getInstance().sendInfo(p);
-           return;
+           TeamManagerUUID.getInstance().sendInfo(p);
        } else {
            if(args.length == 1) {
-               TeamManager.getInstance().sendInfo(p, args[0]);
-               return;
+               TeamManagerUUID.getInstance().sendInfo(p, args[0]);
            }
        }
-
-
     }
 }

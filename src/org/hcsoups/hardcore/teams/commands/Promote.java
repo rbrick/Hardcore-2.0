@@ -1,12 +1,11 @@
 package org.hcsoups.hardcore.teams.commands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.hcsoups.hardcore.Hardcore;
-import org.hcsoups.hardcore.teams.Team;
-import org.hcsoups.hardcore.teams.TeamAction;
-import org.hcsoups.hardcore.teams.TeamManager;
-import org.hcsoups.hardcore.teams.TeamSubCommand;
+import org.hcsoups.hardcore.teams.*;
 
 import java.util.Arrays;
 
@@ -27,25 +26,25 @@ public class Promote extends TeamSubCommand {
               p.sendMessage("§c/team promote <Player>");
               return;
         }
-        if(!TeamManager.getInstance().isOnTeam(p.getName())) {
+        if(!TeamManagerUUID.getInstance().isOnTeam(p.getUniqueId())) {
             p.sendMessage("§cYou are not on a team!");
             return;
-        } else if (!TeamManager.getInstance().isManager(p)) {
+        } else if (!TeamManagerUUID.getInstance().isManager(p)) {
             p.sendMessage("§cYou must be at least a manager to perform this command.");
             return;
 
         } else {
 
-           final Team playerTeam = TeamManager.getInstance().getPlayerTeam(p);
+           final TeamUUID playerTeam = TeamManagerUUID.getInstance().getPlayerTeam(p);
 
-            Team argsTeam = TeamManager.getInstance().getPlayerTeam(args[0]);
+            TeamUUID argsTeam = TeamManagerUUID.getInstance().getPlayerTeam(args[0]);
 
             if(argsTeam == null) {
                 p.sendMessage("§cThat player is not on a team.");
-                return;
+
             } else if(!playerTeam.equals(argsTeam)) {
                 p.sendMessage("§cThat player is not on your team!");
-                return;
+
             } else {
 
                 if(p.getName().equals(args[0])) {
@@ -53,24 +52,20 @@ public class Promote extends TeamSubCommand {
                     return;
                 }
 
+                OfflinePlayer op = Bukkit.getOfflinePlayer(args[0]);
+
                 // Trying to promote a manager
-                if(playerTeam.getManagers().contains(args[0])) {
+                if(playerTeam.getManagers().contains(op.getUniqueId())) {
                    p.sendMessage("§cPlayer '" + args[0] + "' is already promoted!");
                     return;
                 }
 
-                playerTeam.getMembers().remove(args[0]);
+                playerTeam.getMembers().remove(op.getUniqueId());
 
-                playerTeam.getManagers().add(args[0]);
+                playerTeam.getManagers().add(op.getUniqueId());
 
-                TeamManager.getInstance().saveTeam(playerTeam);
-                TeamManager.getInstance().messageTeam(playerTeam, "§3" + p.getName() + " has promoted " + args[0] + ".");
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        TeamManager.getInstance().updateTeam(playerTeam, TeamAction.UPDATE);
-                    }
-                }.runTaskAsynchronously(Hardcore.getPlugin(Hardcore.class));
+             //   TeamManagerUUID.getInstance().saveTeam(playerTeam);
+                TeamManagerUUID.getInstance().messageTeam(playerTeam, "§3" + p.getName() + " has promoted " + args[0] + ".");
 
                 return;
             }

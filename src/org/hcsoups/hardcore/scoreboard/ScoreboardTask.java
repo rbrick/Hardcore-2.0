@@ -24,7 +24,9 @@ public class ScoreboardTask extends BukkitRunnable {
            for(int i = 0; i < hasTask.size(); i++) {
              Map.Entry<String, DaybreakBoard> b = (Map.Entry<String, DaybreakBoard>) hasTask.entrySet().toArray()[i];
 
-             b.getValue().update();
+            if(b.getValue() != null) {
+                b.getValue().update();
+            }
 
                if(toRemove.contains(b.getKey())) {
                    toRemove.remove(b.getKey());

@@ -6,10 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.hcsoups.hardcore.Hardcore;
 import org.hcsoups.hardcore.scoreboard.ScoreboardHandler;
 import org.hcsoups.hardcore.scoreboard.ScoreboardTask;
-import org.hcsoups.hardcore.teams.Team;
-import org.hcsoups.hardcore.teams.TeamAction;
-import org.hcsoups.hardcore.teams.TeamManager;
-import org.hcsoups.hardcore.teams.TeamSubCommand;
+import org.hcsoups.hardcore.teams.*;
 
 /**
  * This code is copyrighted by rbrick and the BreakMC Network.
@@ -28,22 +25,15 @@ public class Create extends TeamSubCommand {
             return;
         }
 
-        if(TeamManager.getInstance().isOnTeam(p.getName())) {
+        if(TeamManagerUUID.getInstance().isOnTeam(p.getUniqueId())) {
             p.sendMessage("§cYou are already in a team!");
             return;
         }
 
         if (args.length == 1) {
-            final Team team = TeamManager.getInstance().createTeam(p, args[0]);
+            final TeamUUID team = TeamManagerUUID.getInstance().createTeam(p, args[0]);
             if (team != null) {
                 //    TeamManager.getInstance().saveTeam(team);
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        TeamManager.getInstance().updatePlayer(p, team);
-                        TeamManager.getInstance().updateTeam(team, TeamAction.UPDATE);
-                    }
-                }.runTaskAsynchronously(Hardcore.getPlugin(Hardcore.class));
 
                 ScoreboardTask.addTask(p.getName(), ScoreboardHandler.getBoards().get(p.getName()));
 
@@ -60,17 +50,9 @@ public class Create extends TeamSubCommand {
         }
 
         if (args.length == 2) {
-            final Team team = TeamManager.getInstance().createTeam(p, args[0], args[1]);
+            final TeamUUID team = TeamManagerUUID.getInstance().createTeam(p, args[0], args[1]);
             if (team != null) {
                 // TeamManager.getInstance().saveTeam(team);
-
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        TeamManager.getInstance().updatePlayer(p, team);
-                        TeamManager.getInstance().updateTeam(team, TeamAction.UPDATE);
-                    }
-                }.runTaskAsynchronously(Hardcore.getPlugin(Hardcore.class));
 
                 ScoreboardTask.addTask(p.getName(), ScoreboardHandler.getBoards().get(p.getName()));
 
@@ -83,7 +65,6 @@ public class Create extends TeamSubCommand {
 
             }
 
-            return;
         }
     }
 }

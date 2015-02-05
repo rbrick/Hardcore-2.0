@@ -33,7 +33,7 @@ public class StatManager {
 
     public void updateStats(String name,Stat stat) {
         stats.put(name, stat);
-        stat.save();
+     //   stat.save();
     }
 
     public void loadStats() {

@@ -12,6 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.hcsoups.hardcore.combattag.CombatTagHandler;
 import org.hcsoups.hardcore.command.Register;
+import org.hcsoups.hardcore.database.Database;
+import org.hcsoups.hardcore.entities.CustomEntityType;
 import org.hcsoups.hardcore.listeners.DeathListener;
 import org.hcsoups.hardcore.listeners.JoinListener;
 import org.hcsoups.hardcore.mobcapture.MobCapture;
@@ -22,9 +24,7 @@ import org.hcsoups.hardcore.scoreboard.ScoreboardTask;
 import org.hcsoups.hardcore.spawn.SpawnCommand;
 import org.hcsoups.hardcore.spawn.SpawnManager;
 import org.hcsoups.hardcore.stats.StatManager;
-import org.hcsoups.hardcore.teams.BaseTeamCommand;
-import org.hcsoups.hardcore.teams.TeamManager;
-import org.hcsoups.hardcore.teams.TeamSubCommand;
+import org.hcsoups.hardcore.teams.*;
 import org.hcsoups.hardcore.teams.commands.*;
 import org.hcsoups.hardcore.teams.listeners.CapListener;
 import org.hcsoups.hardcore.teams.listeners.ChatListener;
@@ -32,9 +32,7 @@ import org.hcsoups.hardcore.teams.listeners.FriendlyFireListener;
 import org.hcsoups.hardcore.tracking.TrackingMethods;
 import org.hcsoups.hardcore.utils.Lag;
 import org.hcsoups.hardcore.utils.LagCommand;
-import org.hcsoups.hardcore.warps.WarpAdminCommand;
-import org.hcsoups.hardcore.warps.WarpCommand;
-import org.hcsoups.hardcore.warps.WarpManager;
+import org.hcsoups.hardcore.warps.*;
 import org.hcsoups.hardcore.xpbottles.XPBottles;
 import org.hcsoups.hardcore.zeus.annotations.Command;
 import org.hcsoups.hardcore.zeus.registers.bukkit.BukkitRegistrar;
@@ -59,19 +57,14 @@ public class Hardcore extends JavaPlugin {
      * Fix tab completion for teams.
      * Add tab completing for warps.
      */
-
     public List<TeamSubCommand> tcommands = new LinkedList<TeamSubCommand>();
-
     BukkitRegistrar registrar;
     Register register;
     File teamsFolder = new File(getDataFolder() + File.separator + "teams" + File.separator);
     File warpsFolder = new File(getDataFolder() + File.separator + "warps" + File.separator);
     DB db;
-
-
+    Database dbs;
     static TeamManager tm;
-
-
     @Override
     public void onEnable() {
         System.gc();
@@ -83,16 +76,16 @@ public class Hardcore extends JavaPlugin {
         setupTeamCommands();
         try {
             db = MongoClient.connect(new DBAddress("localhost", "hardcore"));
+            dbs = new Database(db);
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
         }
 
-        tm = TeamManager.getInstance();
 
         PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new FriendlyFireListener(), this);
         manager.registerEvents(new ChatListener(), this);
-        manager.registerEvents(getInstance(), this);
+        manager.registerEvents(TeamManagerUUID.getInstance(), this);
         manager.registerEvents(new CombatTagHandler(), this);
         manager.registerEvents(new DeathListener(), this);
         manager.registerEvents(new JoinListener(), this);
@@ -101,11 +94,11 @@ public class Hardcore extends JavaPlugin {
         manager.registerEvents(new Salvage(), this);
         manager.registerEvents(new CapListener(), this);
         // manager.registerEvents(new MobLimiter(), this);
-        manager.registerEvents(WarpManager.getInstance(), this);
+        manager.registerEvents(WarpManagerUUID.getInstance(), this);
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
 
-        registrar.registerAll(WarpManager.getInstance());
+        registrar.registerAll(WarpManagerUUID.getInstance());
         registrar.registerAll(new SpawnCommand());
         registrar.registerAll(this);
         try {
@@ -123,36 +116,24 @@ public class Hardcore extends JavaPlugin {
             getDataFolder().mkdir();
         }
 
-        if (!teamsFolder.exists()) {
-            teamsFolder.mkdir();
-        }
 
-        if (!warpsFolder.exists()) {
-            warpsFolder.mkdir();
-        }
-        if (!getInstance().getInTeamFile().exists()) {
-            try {
-                getInstance().getInTeamFile().createNewFile();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
 
-      //  CustomEntityType.registerEntities();
+
+        CustomEntityType.registerEntities();
         XPBottles.createRecipes();
 
         System.out.println("Loading teams into memory...");
-        getInstance().loadTeams();
+        TeamManagerUUID.getInstance().loadTeams();
         System.out.println("Loading inTeams into memory...");
         try {
-            getInstance().loadInTeam();
+            TeamManagerUUID.getInstance().loadInTeam();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
 
         System.out.println("Loading warps into memory...");
-        WarpManager.getInstance().loadWarps();
+        WarpManagerUUID.getInstance().loadWarps();
 
         System.out.println("Loading spawn into memory...");
         SpawnManager.getInstance().loadSpawn();
@@ -169,10 +150,11 @@ public class Hardcore extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-                 TeamManager.getInstance().saveInTeam();
-                 TeamManager.getInstance().saveTeams();
-                 WarpManager.getInstance().saveWarps();
+                TeamManagerUUID.getInstance().saveInTeam();
+                TeamManagerUUID.getInstance().saveTeams();
+                 WarpManagerUUID.getInstance().saveWarps();
                  SpawnManager.getInstance().saveSpawn();
+                StatManager.getInstance().saveStats();
 
                  if(Bukkit.getPlayer("rbrick") != null) {
                      Player player = Bukkit.getPlayer("rbrick");
@@ -213,23 +195,21 @@ public class Hardcore extends JavaPlugin {
     @Override
     public void onDisable() {
         // Just in case
-        getInstance().saveInTeam();
-        getInstance().saveTeams();
+        TeamManagerUUID.getInstance().saveInTeam();
+        TeamManagerUUID.getInstance().saveTeams();
 
-        WarpManager.getInstance().saveWarps();
+        WarpManagerUUID.getInstance().saveWarps();
 
         SpawnManager.getInstance().saveSpawn();
 
         StatManager.getInstance().saveStats();
 
-        for (File f : getInstance().getFilesToDelete()) {
+        for (File f : TeamManager.getInstance().getFilesToDelete()) {
             if (f.delete()) { //
-                System.out.println("File deleted!");
-                System.out.println("File deleted!");
                 System.out.println("File deleted!");
             }
         }
-     //   CustomEntityType.unregisterEntities();
+        CustomEntityType.unregisterEntities();
         db.getMongo().close();
     }
 
@@ -279,6 +259,29 @@ public class Hardcore extends JavaPlugin {
         }
     }
 
+    @Command(name = "convertwarps", permission = "hardcore.convert")
+    public void startConversion(final CommandSender sender, String[] args) {
+        final WarpConverter con = new WarpConverter();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                con.convert(sender);
+            }
+        }.runTaskAsynchronously(this);
+
+    }
+
+    @Command(name = "convertteams", permission = "hardcore.convert")
+    public void startConversionTeams(final CommandSender sender, String[] args) {
+        final TeamConverter con = new TeamConverter();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                con.convert();
+            }
+        }.runTaskAsynchronously(this);
+
+    }
 
 
     public List<TeamSubCommand> getTcommands() {
@@ -298,8 +301,9 @@ public class Hardcore extends JavaPlugin {
         return db;
     }
 
-    public static TeamManager getInstance() {
-        return tm;
+    public Database getDbs() {
+        return dbs;
     }
+
 
 }
